@@ -219,7 +219,9 @@ class HTTPTests(unittest.TestCase):
 
     def test_static_and_session_endpoints(self):
         status,headers,body=self.get('/')
-        self.assertEqual(status,200);self.assertIn('逐项'.encode(),body)
+        self.assertEqual(status,200);self.assertIn(b'Paper Choose',body)
+        status,_,classic=self.get('/classic')
+        self.assertEqual(status,200);self.assertIn('逐项'.encode(),classic)
         self.assertIn("frame-ancestors 'none'",headers['Content-Security-Policy'])
         self.assertEqual(headers['Cache-Control'],'no-store')
         for path in ['/app.js','/style.css','/api/example']:
