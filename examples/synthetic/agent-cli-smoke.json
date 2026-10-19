@@ -1,0 +1,14 @@
+{
+  "scenario": "真实机翻后另存合成英文，刻意注入 will/may 偏移；模拟作者选择 P1-01",
+  "commands_executed": [
+    "translate (Argos real engine)",
+    "prepare",
+    "check",
+    "apply --select P1-01"
+  ],
+  "input_preserved": true,
+  "selected_patch_restores_machine_baseline": true,
+  "client_scope": "当前执行环境通用 CLI；不是 Cursor、Claude Code、Grok Bot 客户端验收",
+  "no_external_audit_api": true,
+  "simulated_author_choice": true
+}

@@ -1,0 +1,64 @@
+{
+  "environment": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "engine_status": {
+    "engine": "Argos Translate",
+    "version": "1.9.6",
+    "pairs": [
+      {
+        "source": "en",
+        "target": "zh"
+      },
+      {
+        "source": "zh",
+        "target": "en"
+      }
+    ],
+    "max_chars": 5000,
+    "message": "模型已安装；首次翻译需要加载。"
+  },
+  "checks": {
+    "real_zh_en": true,
+    "real_en_zh": true,
+    "non_loopback_connections_blocked": true,
+    "real_http_translation_to_request_preview_export_none": true,
+    "ai_audit_executed": false,
+    "real_browser_verified": false,
+    "windows_verified": false
+  },
+  "translations": [
+    {
+      "source_text": "这项研究可能提高准确率，但不能证明因果关系。",
+      "source_sha256": "72447141563a0aa0cda867e993c9dab9436a5d0e4da35303e573468745201f06",
+      "translated_text": "This study may improve the accuracy rate but does not prove causality.",
+      "translation_sha256": "7b65ee4c6e657055dd0d1f2cfce9a24e71fcca49971ed7b01338639e8e25b83d",
+      "engine": {
+        "name": "Argos Translate",
+        "version": "1.9.6",
+        "model_version": "1.9",
+        "device": "cpu",
+        "tested_model_archive_sha256": "62e7af5a3a48b530e47b7b3e5c78c2de79073ecd815750d2bf3ab35b4a67da2d",
+        "source": "zh",
+        "target": "en"
+      },
+      "created_at": "2026-10-19T15:13:02.345347+00:00",
+      "meaning_verified": false
+    },
+    {
+      "source_text": "The estimate is uncertain. Do not claim a causal effect.",
+      "source_sha256": "2e707362dd9684a39f1ccc4c70a2509f967fdf8dc0001e5e86e2753af13125db",
+      "translated_text": "估计数不确定。 不要声称有因果关系。",
+      "translation_sha256": "e41b76e55f3e767774c1f20d5bb253a3a13afc46f843e257b284e953cadabfe1",
+      "engine": {
+        "name": "Argos Translate",
+        "version": "1.9.6",
+        "model_version": "1.9",
+        "device": "cpu",
+        "tested_model_archive_sha256": "433e7c4f034d87fbe2353161e05f18646d7999452f801a4e1f0378522b9850ab",
+        "source": "en",
+        "target": "zh"
+      },
+      "created_at": "2026-10-19T15:13:02.572422+00:00",
+      "meaning_verified": false
+    }
+  ]
+}
