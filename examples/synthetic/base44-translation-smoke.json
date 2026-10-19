@@ -1,0 +1,17 @@
+{
+  "source_text": "The sample contains 24 observations. The intervention may improve accuracy.",
+  "source_sha256": "91e7cd23bb962e4de98ff57e7381080043cfe6113ff7d9a3dc32e8474b3b48d0",
+  "translated_text": "样本包含24项观测. 干预可以提高准确性。",
+  "translation_sha256": "36d41150112727a0bcb6169cc7df89606113a190540a16c57344c3ed6c47ea4a",
+  "engine": {
+    "name": "Argos Translate",
+    "version": "1.9.6",
+    "model_version": "1.9",
+    "device": "cpu",
+    "tested_model_archive_sha256": "433e7c4f034d87fbe2353161e05f18646d7999452f801a4e1f0378522b9850ab",
+    "source": "en",
+    "target": "zh"
+  },
+  "created_at": "2026-10-19T19:01:23.598604+00:00",
+  "meaning_verified": false
+}
