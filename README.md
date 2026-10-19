@@ -42,9 +42,9 @@
 
 如果没有安装，或者不确定：
 
-1. 打开 [Python 官方下载页](https://www.python.org/downloads/)。
-2. 下载 Windows 的 **Python install manager（Python 安装管理器）**。
-3. 打开下载的文件，按安装窗口的提示完成安装。
+1. 打开 [Python 官方 Windows 安装管理器下载页](https://www.python.org/downloads/release/pymanager-264/)。
+2. 在页面的 **Files → Windows** 区域，点击 **Download Installer (MSIX)**。下载的是安装管理器，后面还要用它安装 Python 3.12。
+3. 打开下载的 `.msix` 文件，按安装窗口的提示完成安装。
 4. 在 Windows 开始菜单中搜索并打开 **终端**。终端是输入命令的窗口。
 5. 在终端中输入下面的命令并按回车。这条命令会安装 Python 3.12。
 
