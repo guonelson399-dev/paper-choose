@@ -43,6 +43,7 @@ def main():
     serve=commands.add_parser('serve')
     serve.add_argument('--port',type=int,default=8765)
     serve.add_argument('--open',action='store_true',help='启动后打开系统浏览器')
+    serve.add_argument('--allow-origin',help='允许指定的 https 网页连接本机（例如云端版 Paper Choose 的地址）')
     args=parser.parse_args()
     try:
         if args.command.endswith('-review'):
@@ -79,7 +80,7 @@ def main():
         if args.command=='serve':
             from .server import run
             if not 0<=args.port<=65535:parser.error('端口须在0–65535范围内')
-            run(args.port,args.open);return 0
+            run(args.port,args.open,args.allow_origin);return 0
         chinese=read_text(args.chinese);english=read_text(args.english)
         if args.command=='prepare':
             write_new_directory(args.out,request_bundle(chinese,english))
