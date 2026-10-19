@@ -1,4 +1,4 @@
-"""Loopback-only local UI. No external requests, storage, model calls or file browser."""
+"""Loopback-only local UI. Optional local translation; no automatic cloud calls or file browser."""
 from __future__ import annotations
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -50,9 +50,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.valid_host():return
         route=urlsplit(self.path).path
+        if route=='/api/translation/status':
+            from .translation import status
+            self.send_json(200,status());return
         if route=='/api/session':
             self.send_json(200,{'token':self.server.session_token,'version':__version__});return
-        known={'/':('index.html','text/html; charset=utf-8'),'/app.js':('app.js','text/javascript; charset=utf-8'),'/style.css':('style.css','text/css; charset=utf-8')}
+        known={'/':('index.html','text/html; charset=utf-8'),'/app.js':('app.js','text/javascript; charset=utf-8'),'/style.css':('style.css','text/css; charset=utf-8'),'/translation.js':('translation.js','text/javascript; charset=utf-8')}
         if route in known:
             name,mime=known[route];self.send_bytes(200,(WEB/name).read_bytes(),mime);return
         if route=='/api/example':
@@ -80,6 +83,10 @@ class Handler(BaseHTTPRequestHandler):
             if len(raw)!=size:reject('REQUEST_SIZE','请求不完整。')
             data=parse_json(raw.decode('utf-8'))
             route=urlsplit(self.path).path
+            if route=='/api/translate':
+                require_keys(data,{'text','source','target'},'translation request')
+                from .translation import translate_text
+                self.send_json(200,translate_text(data['text'],data['source'],data['target']));return
             if route=='/api/request':
                 require_keys(data,{'chinese','english'},'request')
                 self.send_bytes(200,zip_bytes(request_bundle(data['chinese'],data['english'])),'application/zip','paperchoose-audit-request.zip');return
@@ -111,7 +118,7 @@ def run(port=8765,open_browser=False):
     server=LocalServer(port)
     url=f'http://127.0.0.1:{server.server_port}/'
     print(f'Paper Choose {__version__} — {url}',flush=True)
-    print('本地内存处理，无模型或云端调用；关闭终端即可停止。',flush=True)
+    print('本地内存处理，可选本地机翻；不自动调用云端。关闭终端即可停止。',flush=True)
     if open_browser:
         threading.Timer(0.4,lambda:webbrowser.open(url)).start()
     try:server.serve_forever()
