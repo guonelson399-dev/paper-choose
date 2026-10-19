@@ -9,22 +9,13 @@
 3. 查看修改后的英文稿。
 4. 下载确认后的结果。
 
-例如，中文写“**可能提高准确率**”，英文却写成“**一定提高准确率**”。核对的人指出这个区别后，你可以选择把英文改回来。
+比如说，中文写“**可能提高准确率**”，英文却写成“**一定提高准确率**”。核对的人指出这个区别后，你可以选择把英文改回来。
 
 **程序只执行你选中的修改。** 程序另外生成新稿，保留原文件。
 
 目前是早期试用版，需要在电脑上运行。工具暂时不能自动调用 AI。使用自己的稿件时，你需要把核对请求交给自己选择的 AI 助手，再把修改建议导回工具。
 
 下面的操作不要求你编写代码。你需要安装 Python，并复制少量命令。
-
-## 第一次来？先看这几句话
-
-- **GitHub 是放项目文件的地方。** 你现在看到的是项目介绍和下载页面，不是工具的操作页面。
-- **README 就是这份使用说明。** 不需要逐个打开上面的代码文件。
-- **Python 是运行这个工具需要的软件。** 装好以后，按下面步骤操作即可，不需要学 Python。
-- **先试内置例子。** 不用准备自己的文章，也不用先找 AI，能更快了解它怎么用。
-
-下面以 Windows 电脑为例。
 
 ## 第一步：把工具下载到电脑
 
@@ -247,11 +238,3 @@ python -m paperchoose serve --open
 ```sh
 python -B -m unittest discover -s tests -v
 ```
-
-## 来源与许可
-
-项目从原有的 `paper-limit-choose-2` 方法包扩展而来。来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。原包的 MIT 声明保留，完整许可证和版权署名仍待确认。
-
-下载与安装步骤参考：[GitHub 下载说明](https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives)、[Python Windows 安装说明](https://docs.python.org/3/using/windows.html)。
-
-本文的写法参考 [asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill/blob/master/SKILL.md) 的清晰表达方法，并按中文使用说明调整。本文不属于航空维护文档，也不声明通过 ASD-STE100 合规认证。
