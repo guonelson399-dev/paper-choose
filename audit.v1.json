@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "mode": "translation_audit",
+  "chinese_sha256": "655d559bfd4a4cca9ed188cf6e7ba59ee40264b11f2f855d3f5fea6b150e6c0b",
+  "english_sha256": "14ba795e0f72589a85b8a1194c45b232eacf11d8292856375a007998a01f0706",
+  "reviewer": {
+    "kind": "synthetic",
+    "label": "合成教学案例：手工构造，非模型调用"
+  },
+  "proposals": [
+    {
+      "id": "P1-01",
+      "category": "modality",
+      "before": "always improves",
+      "after": "may improve",
+      "context_before": "",
+      "context_after": "",
+      "source_quote": "干预可能提高准确率。",
+      "reason": "原文表示可能性，英文却声称始终改善。仅替换该短语。"
+    },
+    {
+      "id": "P1-02",
+      "category": "meaning",
+      "before": "certain",
+      "after": "uncertain",
+      "context_before": "",
+      "context_after": "",
+      "source_quote": "估计存在不确定性。",
+      "reason": "certain 与中文的不确定性相反。"
+    }
+  ]
+}

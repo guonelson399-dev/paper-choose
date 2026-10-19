@@ -1,0 +1,29 @@
+Paper Choose 2.1.0-dev.1 — local workbench candidate
+
+1. Extract the complete paper-limit-choose-2 directory.
+2. Install/use Python 3.10 or newer. No pip packages are required.
+3. Windows: double-click start_windows.cmd and keep the terminal open.
+   Command line, from this directory:
+     python -m paperchoose serve --open
+4. Open http://127.0.0.1:8765/ if the browser did not open.
+5. Try the synthetic example, select P1-01, preview, then download.
+6. Stop the local service with Ctrl+C.
+
+If the port is occupied:
+  python -m paperchoose serve --port 8766 --open
+If Windows has only the py launcher, replace python with py -3.
+The Windows launcher itself has not been run in the Linux test environment.
+
+The server binds only to 127.0.0.1. It does not store manuscripts or call models.
+There are no downloads, API keys, installers or cloud calls in the launcher.
+A Python interpreter and browser are external prerequisites, not bundled software.
+
+For a compatible assistant, explicitly supply SKILL.md and referenced files.
+This candidate has not been installed into or used to overwrite any existing skill.
+The assistant produces an audit JSON; the local program applies only your selected IDs.
+
+Run checks from this directory:
+  python -B -m unittest discover -s tests -v
+
+See README.md and docs/AUDIT_FORMAT.md. Public release still requires the author's
+repository, visibility, content and license/attribution decision.

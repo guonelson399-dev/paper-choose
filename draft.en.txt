@@ -1,0 +1,5 @@
+The sample contains 24 observations.
+
+The intervention always improves accuracy.
+The estimate is certain.
+This finding are useful.

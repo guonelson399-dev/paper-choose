@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Choose · 作者择项修改</title>
+<link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/">Paper Choose<span>保留原意，由你决定</span></a><span class="local">● 本地处理</span></header>
+<main>
+<section class="intro"><div class="eyebrow">作者择项修改 · 本地工作台</div><h1>每一处修改，<br>都经过你的选择。</h1><p>放入中英文原稿，导入助手的核对结果。逐项查看依据，再生成可追溯的新版本。</p><button id="example" class="secondary">试用合成示例</button><span id="version" class="subtle"></span></section>
+<div id="notice" role="status" aria-live="polite">正在连接本地工具…</div>
+<section class="step" aria-labelledby="input-title">
+<div class="section-head"><div><span class="step-number">01</span><h2 id="input-title">确认原稿</h2></div><span class="subtle">中文为本次语义依据</span></div>
+<div class="columns">
+<div class="input-panel"><div class="panel-head"><label for="chinese">中文原稿</label><label class="file-control">导入 TXT<input id="chinese-file" type="file" accept=".txt,text/plain"></label></div><textarea id="chinese" placeholder="粘贴你确认的中文原意…" spellcheck="false"></textarea><span id="chinese-meta" class="subtle">仅处理你在此提供的文本</span></div>
+<div class="input-panel"><div class="panel-head"><label for="english">英文译稿</label><label class="file-control">导入 TXT<input id="english-file" type="file" accept=".txt,text/plain"></label></div><textarea id="english" placeholder="粘贴对应的英文译稿…" spellcheck="false"></textarea><span id="english-meta" class="subtle">原文件不会被覆盖</span></div>
+</div>
+<div class="action-line"><button id="request" class="secondary">导出给助手的核对请求</button><p class="helper">得到请求包后，将其中的提示与材料交给你选用的助手。返回的核对 JSON 在下方导入。</p></div>
+<p class="privacy">本地工具不调用模型、不自动上传文本。把请求包交给云端助手时，请自行选择允许处理的材料。</p>
+</section>
+<section class="step" aria-labelledby="audit-title">
+<div class="section-head"><div><span class="step-number">02</span><h2 id="audit-title">查看核对结果</h2></div><span id="reviewer" class="subtle">核对由你选用的助手或人工提供</span></div>
+<div class="import-row"><label class="file-button">选择核对 JSON<input id="audit-file" type="file" accept=".json,application/json"></label><span id="audit-filename" class="subtle">也可以粘贴完整 JSON</span></div>
+<details id="audit-details"><summary>粘贴或查看核对 JSON</summary><label class="sr-only" for="audit">核对 JSON</label><textarea id="audit" class="json" spellcheck="false" placeholder="导入或粘贴符合格式的核对结果…"></textarea></details>
+<div class="action-line"><button id="check" class="primary">校验并展示修改项</button><span class="helper">校验版本、原文位置和引用；语义判断仍需你审阅。</span></div>
+<div id="empty" class="empty">完成校验后，修改项会出现在这里。默认均不选中。</div>
+<div id="proposals" class="proposal-grid"></div>
+</section>
+<section class="step final-step" aria-labelledby="result-title">
+<div class="section-head"><div><span class="step-number">03</span><h2 id="result-title">确认修改与导出</h2></div><span id="selection-count" class="badge">已选 0 项</span></div>
+<div class="action-line"><button id="preview" class="primary" disabled>预览所选修改</button><button id="none" class="secondary" disabled>全部不采用</button><button id="export" class="primary" disabled>确认并下载结果</button></div>
+<div id="preview-summary" class="helper">下载包含新英文稿、前后差异和采用记录。已有文件保持原样。</div>
+<div id="preview-area" hidden><div class="columns"><div><h3>新英文稿</h3><pre id="revised"></pre></div><div><h3>修改差异</h3><pre id="diff"></pre></div></div></div>
+</section>
+<footer>支持 UTF-8 纯文本、P1/P2 精确替换。此页未接入自动核对、Word 排版或 BTI/AEC 修改。关闭或刷新页面会清除未下载的会话内容。</footer>
+</main>
+</body></html>

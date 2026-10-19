@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "input": "draft.en.txt",
+  "input_sha256": "14ba795e0f72589a85b8a1194c45b232eacf11d8292856375a007998a01f0706",
+  "selected_ids": [
+    "P1-01"
+  ],
+  "unselected_ids": [
+    "P1-02"
+  ],
+  "note": "Demonstration record; no patch executor consumes this file."
+}
