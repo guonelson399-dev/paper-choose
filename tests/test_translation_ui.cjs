@@ -6,9 +6,10 @@ const source=fs.readFileSync(require('node:path').join(__dirname,'../paperchoose
 function setup(){
  const nodes=new Map(),messages=[],saved=[];
  const el=id=>{if(!nodes.has(id))nodes.set(id,{value:'',textContent:'',hidden:false,disabled:false,handlers:{},addEventListener(k,f){this.handlers[k]=f;}});return nodes.get(id);};
- const state={token:'test',chinese:'中文原稿',english:'Old English',audit:'old audit',revision:1};
+ el('direction').value='zh-en';
+ const state={token:'test',source:'中文原稿',draft:'Old English',audit:'old audit',revision:1};
  let resolve;
- const context={state,$:el,notice:(...x)=>messages.push(x),Blob,
+ const context={state,$:el,document:{addEventListener(){}},notice:(...x)=>messages.push(x),Blob,
   download:(blob,name)=>saved.push({blob,name}),
   invalidateAudit:()=>{state.revision++;},
   window:{confirm:()=>true},handle:f=>async()=>{try{await f();}catch(e){messages.push([e.message,true]);}},
@@ -19,13 +20,13 @@ function setup(){
  return {el,state,context,messages,saved,result,finish:()=>resolve(result),click:id=>el(id).handlers.click()};
 }
 (async()=>{
- let h=setup();let job=h.click('translate-en');h.state.chinese='changed';h.state.revision++;h.finish();await job;
- assert.equal(h.state.english,'Old English');assert.equal(h.el('translation-result').hidden,true);
- h=setup();job=h.click('translate-en');h.finish();await job;
- assert.equal(h.state.english,'Old English'); // preview never applies automatically
- h.context.window.confirm=()=>false;await h.click('translation-use');assert.equal(h.state.english,'Old English');
- h.context.window.confirm=()=>true;await h.click('translation-use');assert.equal(h.state.english,'New English');assert.equal(h.state.audit,'');assert.equal(h.el('audit').value,'');
- await h.click('translation-save');const record=JSON.parse(await h.saved[0].blob.text());assert.equal(record.input_snapshot.english,'Old English');assert.equal(record.adopted,true);
- h=setup();job=h.click('translate-en');h.finish();await job;h.state.revision++;await h.click('translation-use');assert.equal(h.state.english,'Old English');
+ let h=setup();let job=h.click('translate');h.state.source='changed';h.state.revision++;h.finish();await job;
+ assert.equal(h.state.draft,'Old English');assert.equal(h.el('translation-result').hidden,true);
+ h=setup();job=h.click('translate');h.finish();await job;
+ assert.equal(h.state.draft,'Old English'); // preview never applies automatically
+ h.context.window.confirm=()=>false;await h.click('translation-use');assert.equal(h.state.draft,'Old English');
+ h.context.window.confirm=()=>true;await h.click('translation-use');assert.equal(h.state.draft,'New English');assert.equal(h.state.audit,'');assert.equal(h.el('audit').value,'');
+ await h.click('translation-save');const record=JSON.parse(await h.saved[0].blob.text());assert.equal(record.input_snapshot.draft,'Old English');assert.equal(record.adopted,true);
+ h=setup();job=h.click('translate');h.finish();await job;h.state.revision++;await h.click('translation-use');assert.equal(h.state.draft,'Old English');
  console.log('PASS: stale in-flight result, preview-only, reject replacement, accept+invalidate, original snapshot export, stale preview rejection');
 })().catch(e=>{console.error(e);process.exitCode=1;});
