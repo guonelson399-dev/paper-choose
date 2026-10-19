@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paper Choose · 作者择项修改</title>
-<link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script>
+<link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script><script src="/translation.js" defer></script>
 </head>
 <body>
 <header class="topbar"><a class="brand" href="/">Paper Choose<span>保留原意，由你决定</span></a><span class="local">● 本地处理</span></header>
 <main>
-<section class="intro"><div class="eyebrow">作者择项修改 · 本地工作台</div><h1>每一处修改，<br>都经过你的选择。</h1><p>放入中英文原稿，导入助手的核对结果。逐项查看依据，再生成可追溯的新版本。</p><button id="example" class="secondary">试用合成示例</button><span id="version" class="subtle"></span></section>
+<section class="intro"><div class="eyebrow">作者择项修改 · 本地工作台</div><h1>每一处修改，<br>都经过你的选择。</h1><p>放入原稿，可先用本地翻译生成对应文本。导入助手的核对结果，逐项查看依据，再生成可追溯的新版本。</p><button id="example" class="secondary">试用合成示例</button><span id="version" class="subtle"></span></section>
 <div id="notice" role="status" aria-live="polite">正在连接本地工具…</div>
 <section class="step" aria-labelledby="input-title">
 <div class="section-head"><div><span class="step-number">01</span><h2 id="input-title">确认原稿</h2></div><span class="subtle">中文为本次语义依据</span></div>
@@ -16,8 +16,15 @@
 <div class="input-panel"><div class="panel-head"><label for="chinese">中文原稿</label><label class="file-control">导入 TXT<input id="chinese-file" type="file" accept=".txt,text/plain"></label></div><textarea id="chinese" placeholder="粘贴你确认的中文原意…" spellcheck="false"></textarea><span id="chinese-meta" class="subtle">仅处理你在此提供的文本</span></div>
 <div class="input-panel"><div class="panel-head"><label for="english">英文译稿</label><label class="file-control">导入 TXT<input id="english-file" type="file" accept=".txt,text/plain"></label></div><textarea id="english" placeholder="粘贴对应的英文译稿…" spellcheck="false"></textarea><span id="english-meta" class="subtle">原文件不会被覆盖</span></div>
 </div>
+<section aria-labelledby="translation-title">
+<h3 id="translation-title">先翻译，再核对</h3>
+<p id="translation-status" class="helper" role="status">正在检查可选本地翻译…</p>
+<div class="action-line"><button id="translate-en" class="secondary" disabled>中文 → 英文</button><button id="translate-zh" class="secondary" disabled>英文 → 中文（阅读草稿）</button><button id="translation-refresh" class="secondary">检查安装状态</button></div>
+<details><summary>第一次使用本地翻译？</summary><p>在项目文件夹中双击 setup_local_translation.cmd。按提示确认安装并等待完成，再关闭旧的启动窗口，重新打开工具。首次安装需要联网下载依赖和中英模型；安装后翻译在本机运行。具体步骤见 README。</p></details>
+<div id="translation-result" hidden><h3>译文预览</h3><pre id="translation-text"></pre><p id="translation-info" class="helper"></p><div class="action-line"><button id="translation-use" class="primary">我已核对，采用这份译文</button><button id="translation-save" class="secondary">下载本次翻译记录</button></div><p class="helper">先检查人名、数字、否定词和“可能／一定”。中文译文是阅读草稿，你确认并修订后，才作为核对英文的依据。</p></div>
+</section>
 <div class="action-line"><button id="request" class="secondary">导出给助手的核对请求</button><p class="helper">得到请求包后，将其中的提示与材料交给你选用的助手。返回的核对 JSON 在下方导入。</p></div>
-<p class="privacy">本地工具不调用模型、不自动上传文本。把请求包交给云端助手时，请自行选择允许处理的材料。</p>
+<p class="privacy">本地机翻使用你安装的 Argos 模型，不自动上传文本。把请求包交给云端助手时，请自行选择允许处理的材料。</p>
 </section>
 <section class="step" aria-labelledby="audit-title">
 <div class="section-head"><div><span class="step-number">02</span><h2 id="audit-title">查看核对结果</h2></div><span id="reviewer" class="subtle">核对由你选用的助手或人工提供</span></div>
