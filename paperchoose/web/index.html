@@ -1,45 +1,44 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Paper Choose · 作者择项修改</title>
-<link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script><script src="/translation.js" defer></script>
-</head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Choose · 机翻后，只改你选中的地方</title>
+<link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script><script src="/translation.js" defer></script></head>
 <body>
-<header class="topbar"><a class="brand" href="/">Paper Choose<span>保留原意，由你决定</span></a><span class="local">● 本地处理</span></header>
+<header class="topbar"><a class="brand" href="/">Paper Choose<span>保留原意，由你决定</span></a><span class="local">● 本地工作台</span></header>
 <main>
-<section class="intro"><div class="eyebrow">作者择项修改 · 本地工作台</div><h1>每一处修改，<br>都经过你的选择。</h1><p>放入原稿，可先用本地翻译生成对应文本。导入助手的核对结果，逐项查看依据，再生成可追溯的新版本。</p><button id="example" class="secondary">试用合成示例</button><span id="version" class="subtle"></span></section>
+<section class="intro"><div class="eyebrow">已有论文 → 机翻 → 一次核对 → 作者选择</div><h1>机翻后，<br>只改你选中的地方。</h1><p>放入原稿和译文，AI 在同一轮识别重要术语、检查意思偏移。你决定哪些要改。原稿始终保留，不强制往返翻译。</p><button id="example" class="secondary">试用合成示例</button><span id="version" class="subtle"></span>
+<div class="action-line"><button id="save-project" class="secondary">保存项目</button><label class="file-button">恢复项目<input id="load-project" type="file" accept=".json,application/json"></label></div></section>
 <div id="notice" role="status" aria-live="polite">正在连接本地工具…</div>
-<section class="step" aria-labelledby="input-title">
-<div class="section-head"><div><span class="step-number">01</span><h2 id="input-title">确认原稿</h2></div><span class="subtle">中文为本次语义依据</span></div>
+<section class="step"><div class="section-head"><div><span class="step-number">01</span><h2>放入原稿，准备译文</h2></div><span class="subtle">原稿决定意思，译文是修改对象</span></div>
+<div class="settings"><label for="direction">翻译方向</label><select id="direction"><option value="zh-en">中文 → 英文</option><option value="en-zh">英文 → 中文</option></select>
+<label for="protection-mode">术语与保护内容</label><select id="protection-mode"><option value="auto">让 AI 自动识别</option><option value="manual">我手动填写</option><option value="combined">我填写一部分，AI 补充</option></select></div>
+<p class="helper">AI 识别在译后核对时完成，不会在此自动改稿。已有英文且仍要英文时，不必为使用工具而翻译一圈。</p>
+<details><summary>手动添加保护内容（可选）</summary>
+<label for="protected-terms">译文必须保留的准确写法（每行一项）</label><textarea id="protected-terms" class="compact" placeholder="例如 SFC、作者姓名、模型英文名称。只填本次译文必须出现的准确写法。"></textarea>
+<label for="author-notes">其他原意或术语要求</label><textarea id="author-notes" class="compact" placeholder="例如：may 必须保持“可能”的强度；不要将相关关系写成因果关系。"></textarea>
+<p class="helper">手动内容优先。自动模式下填写内容会切换为“手动＋AI 补充”。手动模式仍检查完整语义，只是不另扩充术语表。</p></details>
 <div class="columns">
-<div class="input-panel"><div class="panel-head"><label for="chinese">中文原稿</label><label class="file-control">导入 TXT<input id="chinese-file" type="file" accept=".txt,text/plain"></label></div><textarea id="chinese" placeholder="粘贴你确认的中文原意…" spellcheck="false"></textarea><span id="chinese-meta" class="subtle">仅处理你在此提供的文本</span></div>
-<div class="input-panel"><div class="panel-head"><label for="english">英文译稿</label><label class="file-control">导入 TXT<input id="english-file" type="file" accept=".txt,text/plain"></label></div><textarea id="english" placeholder="粘贴对应的英文译稿…" spellcheck="false"></textarea><span id="english-meta" class="subtle">原文件不会被覆盖</span></div>
-</div>
-<section aria-labelledby="translation-title">
-<h3 id="translation-title">先翻译，再核对</h3>
-<p id="translation-status" class="helper" role="status">正在检查可选本地翻译…</p>
-<div class="action-line"><button id="translate-en" class="secondary" disabled>中文 → 英文</button><button id="translate-zh" class="secondary" disabled>英文 → 中文（阅读草稿）</button><button id="translation-refresh" class="secondary">检查安装状态</button></div>
-<details><summary>第一次使用本地翻译？</summary><p>在项目文件夹中双击 setup_local_translation.cmd。按提示确认安装并等待完成，再关闭旧的启动窗口，重新打开工具。首次安装需要联网下载依赖和中英模型；安装后翻译在本机运行。具体步骤见 README。</p></details>
-<div id="translation-result" hidden><h3>译文预览</h3><pre id="translation-text"></pre><p id="translation-info" class="helper"></p><div class="action-line"><button id="translation-use" class="primary">我已核对，采用这份译文</button><button id="translation-save" class="secondary">下载本次翻译记录</button></div><p class="helper">先检查人名、数字、否定词和“可能／一定”。中文译文是阅读草稿，你确认并修订后，才作为核对英文的依据。</p></div>
+<div class="input-panel"><div class="panel-head"><label id="source-label" for="source">中文原稿</label><label class="file-control">导入原稿 TXT<input id="source-file" type="file" accept=".txt,text/plain"></label></div><textarea id="source" placeholder="粘贴作者提供的原稿，不需要额外制作中文阅读稿…" spellcheck="false"></textarea><span id="source-meta" class="subtle">原稿不会被翻译结果覆盖</span></div>
+<div class="input-panel"><div class="panel-head"><label id="draft-label" for="draft">英文机翻稿（待修改）</label><label class="file-control">导入机翻 TXT<input id="draft-file" type="file" accept=".txt,text/plain"></label></div><textarea id="draft" placeholder="已有机翻稿可直接粘贴；没有时使用下方本地翻译…" spellcheck="false"></textarea><span id="draft-meta" class="subtle">核对和所选修改只作用于这份译文</span></div></div>
+<details><summary>另附最初的英文原稿作参考（可选）</summary><label for="reference-original">原始英文参考</label><textarea id="reference-original" class="compact" placeholder="例如当前原稿是作者修订过的中文，可附最初英文供术语和论述追溯。它不会覆盖当前原稿的意思。"></textarea></details>
+<h3>使用本地翻译，或保留你导入的机翻稿</h3><p id="translation-status" class="helper" role="status">正在检查翻译安装…</p>
+<div class="action-line"><button id="translate" class="secondary" disabled>按所选方向翻译原稿</button><button id="translation-refresh" class="secondary">检查安装状态</button></div>
+<details><summary>第一次使用本地翻译？</summary><p>在完整解压后的项目文件夹里双击 setup_local_translation.cmd，按提示安装依赖和模型。关闭旧启动窗口，再运行 start_windows.cmd。首次下载需联网，翻译在本机运行。也可直接导入其他翻译软件的译文。</p></details>
+<div id="translation-result" hidden><h3>机翻预览（尚未经过语义核对）</h3><pre id="translation-text"></pre><p id="translation-info" class="helper"></p><div class="action-line"><button id="translation-use" class="primary">放入待核对译文</button><button id="translation-save" class="secondary">下载本次翻译记录</button></div></div>
 </section>
-<div class="action-line"><button id="request" class="secondary">导出给助手的核对请求</button><p class="helper">得到请求包后，将其中的提示与材料交给你选用的助手。返回的核对 JSON 在下方导入。</p></div>
-<p class="privacy">本地机翻使用你安装的 Argos 模型，不自动上传文本。把请求包交给云端助手时，请自行选择允许处理的材料。</p>
+<section class="step"><div class="section-head"><div><span class="step-number">02</span><h2>一次核对，选择必要修改</h2></div><span id="reviewer" class="subtle">由你使用的 AI 助手核对</span></div>
+<p>将原稿、机翻稿和可选保护要求一起交给助手：识别术语与核对意思在同一轮完成。只列需要修改的地方，已正确保留的内容无需逐项确认。</p>
+<div class="action-line"><button id="request" class="primary">准备给 AI 的核对材料</button><p class="helper">本页面未连接云端 AI。下载后交给你允许处理材料的助手；具备文件和命令权限的助手可直接运行流程。</p></div>
+<details class="exchange"><summary>交给助手与导回结果（手动使用网页时）</summary><p>把请求包中的 AUDIT_PROMPT.md、request.json 和项目的 SKILL.md 交给助手，要求返回 audit.json，不直接改稿。助手若需要，另提供 references 中对应规则。</p>
+<label class="file-button">导入助手返回的建议<input id="audit-file" type="file" accept=".json,application/json"></label><span id="audit-filename" class="subtle">尚未导入</span>
+<details id="audit-details"><summary>高级：粘贴或查看 JSON</summary><label class="sr-only" for="audit">核对 JSON</label><textarea id="audit" class="json" spellcheck="false" placeholder="助手生成的完整核对 JSON"></textarea></details></details>
+<div class="action-line"><button id="check" class="secondary">校验并展示修改项</button><span class="helper">检查版本和定位；不代替作者判断意思。</span></div>
+<details><summary>查看 AI 识别的保护内容（只读参考）</summary><pre id="observations">尚未核对。</pre></details>
+<div id="empty" class="empty">导入建议后，修改项显示在这里，默认均不采用。</div><div id="proposals" class="proposal-grid"></div>
 </section>
-<section class="step" aria-labelledby="audit-title">
-<div class="section-head"><div><span class="step-number">02</span><h2 id="audit-title">查看核对结果</h2></div><span id="reviewer" class="subtle">核对由你选用的助手或人工提供</span></div>
-<div class="import-row"><label class="file-button">选择核对 JSON<input id="audit-file" type="file" accept=".json,application/json"></label><span id="audit-filename" class="subtle">也可以粘贴完整 JSON</span></div>
-<details id="audit-details"><summary>粘贴或查看核对 JSON</summary><label class="sr-only" for="audit">核对 JSON</label><textarea id="audit" class="json" spellcheck="false" placeholder="导入或粘贴符合格式的核对结果…"></textarea></details>
-<div class="action-line"><button id="check" class="primary">校验并展示修改项</button><span class="helper">校验版本、原文位置和引用；语义判断仍需你审阅。</span></div>
-<div id="empty" class="empty">完成校验后，修改项会出现在这里。默认均不选中。</div>
-<div id="proposals" class="proposal-grid"></div>
-</section>
-<section class="step final-step" aria-labelledby="result-title">
-<div class="section-head"><div><span class="step-number">03</span><h2 id="result-title">确认修改与导出</h2></div><span id="selection-count" class="badge">已选 0 项</span></div>
+<section class="step final-step"><div class="section-head"><div><span class="step-number">03</span><h2>检查结果，下载新稿</h2></div><span id="selection-count" class="badge">已选 0 项</span></div>
 <div class="action-line"><button id="preview" class="primary" disabled>预览所选修改</button><button id="none" class="secondary" disabled>全部不采用</button><button id="export" class="primary" disabled>确认并下载结果</button></div>
-<div id="preview-summary" class="helper">下载包含新英文稿、前后差异和采用记录。已有文件保持原样。</div>
-<div id="preview-area" hidden><div class="columns"><div><h3>新英文稿</h3><pre id="revised"></pre></div><div><h3>修改差异</h3><pre id="diff"></pre></div></div></div>
-</section>
-<footer>支持 UTF-8 纯文本、P1/P2 精确替换。此页未接入自动核对、Word 排版或 BTI/AEC 修改。关闭或刷新页面会清除未下载的会话内容。</footer>
-</main>
-</body></html>
+<div id="preview-summary" class="helper">下载包含原稿、机翻稿、新稿、差异与采用记录。</div>
+<div id="preview-area" hidden><div class="columns"><div><h3>修改后的译文</h3><pre id="revised"></pre></div><div><h3>实际修改差异</h3><pre id="diff"></pre></div></div></div></section>
+<footer>最小修改协议：只改恢复原意所需的范围，只执行作者选中项。支持 UTF-8 纯文本与 P1/P2 替换，Word 排版需另行处理。关闭前请保存项目或下载结果；不会自动上传或持久保存稿件。</footer>
+</main></body></html>
