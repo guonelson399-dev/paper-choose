@@ -4,9 +4,15 @@
 
 | 项目 | 源版本 | 产物 | 已做检查 | 公开/运行阻碍 | 下一步 |
 | --- | --- | --- | --- | --- | --- |
-| Paper Choose | GitHub 437b60a + 作者提供 Python 接入包 + Base44 完整源码包 | frontend 可维护源码、paperchoose/webapp 构建产物、同一 Python 执行器、中文 README | 57 项 Python 测试；8 项分批单测；真实 React/jsdom + Python HTTP 流程；lint；Vite 构建；实际 Argos 英译中短稿 | 上游 JSX 类型检查有报错；Windows 浏览器与真实 Base44 云端调用未在本轮验收；最终项目许可证文本未确定 | 通过云浏览器上传并逐文件回读；随后在用户 Windows 环境验收 |
+| Paper Choose | GitHub 437b60a + 作者提供 Python 接入包 + Base44 完整源码包 | frontend 可维护源码、paperchoose/webapp 构建产物、同一 Python 执行器、中文 README | 57 项 Python 测试；8 项分批单测；真实 React/jsdom + Python HTTP 流程；lint；Vite 构建；实际 Argos 英译中短稿 | 上游 JSX 类型检查有报错；Windows 浏览器与真实 Base44 云端调用未在本轮验收；最终项目许可证文本未确定 | 已通过云浏览器上传并逐文件回读；下一步在用户 Windows 环境验收 |
 | ResearchOS | 沿用原交接入口 | 本轮未改 | 无新增测试 | 不据旧测试判断当前部署 | Paper Choose 收口后再推进 |
 | 音频组件 | FunASR-Local-Windows-v2.1.0 历史入口 | 本轮未改 | 无新增运行 | 本轮未重新读取源包 | 按作者决定暂缓 |
+
+## 已上传及远端核对
+
+已通过云浏览器上传到 `guonelson399-dev/paper-choose` 的 main 分支（原有公开可见性保持）。
+内容提交 `fe25a139c10f871bcbeb56ff75935ccc38d6669b` 的 173 个文件，与本地候选逐一 Git blob 摘要核对完全一致：无缺失、无多余、无内容差异。
+本条状态记录随后单独提交，并回读核实。GitHub 源码公开不等于 Base44 网站已重新部署，也不等于 Windows 已运行。
 
 ## 本轮已运行与范围
 
