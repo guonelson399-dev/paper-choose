@@ -1,7 +1,11 @@
 __pycache__/
 *.py[cod]
-.venv/
-
 .paperchoose-venv/
 .translation-data/
-translation-record*.json
+.venv/
+node_modules/
+frontend/dist/
+frontend/dist-local/
+.env.local
+.env.*.local
+*.before-webapp

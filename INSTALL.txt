@@ -1,12 +1,14 @@
-Paper Choose 短流程候选版 2.1.0-dev.2+shortflow.1
+Paper Choose 安装与打开（Windows）
 
-先解压整个 paper-choose 文件夹，再打开 README.md。
-基础功能：安装 Python 3.10 或更新版本，双击 start_windows.cmd。
-可选本地翻译：使用 Python 3.12，双击 setup_local_translation.cmd。
-安装器联网下载依赖与双向模型，不读取稿件。安装后重启工具。
-在页面选择翻译方向，并选择 AI 自动识别、手动填写或手动＋AI 补充保护内容。
-点击“按所选方向翻译原稿”，再“放入待核对译文”。原稿保持不变；AI在一轮中识别保护内容并核对译文。
-AI 核对由当前助手完成；有文件与命令执行权限的助手可读取 docs/AGENT_WORKFLOW.md 跑整条链，不需另开 API。
-单独使用网页时仍需导出请求并导入建议。
-原稿不被覆盖，关闭页面前点击“保存项目”或下载结果。
-Windows 安装器尚未实机验证。更详细说明及已做检查见 README.md。
+1. GitHub → Code → Download ZIP；右键压缩包“全部提取”。
+2. 建议 Python 3.12。官方入口：https://www.python.org/downloads/windows/
+   已装好 Python 3.10–3.12 的人不用重装。终端执行 py -3.12 --version 检查。
+3. 想使用本地翻译，双击 setup_local_translation.cmd；确认下载后等待 Done。
+4. 双击 start_windows.cmd，保持终端窗口打开。
+5. 浏览器访问 http://127.0.0.1:8765/ 。不要直接双击 index.html。
+
+普通使用者无需 Node.js。新网页已预先构建。
+翻译和执行修改在本机；AI 核对需连接配置的 Base44 云端服务。
+连接和额度由服务方控制；GitHub 下载不自动获得云端账户或额度。
+原手动导入建议的页面：http://127.0.0.1:8765/classic
+详细步骤和故障处理见 README.md。
