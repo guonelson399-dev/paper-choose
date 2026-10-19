@@ -87,6 +87,28 @@ class Handler(BaseHTTPRequestHandler):
                 require_keys(data,{'text','source','target'},'translation request')
                 from .translation import translate_text
                 self.send_json(200,translate_text(data['text'],data['source'],data['target']));return
+            if route.startswith('/api/review/'):
+                from . import workflow
+                action=route.removeprefix('/api/review/')
+                if action not in ('request','check','preview','export'):
+                    reject('NOT_FOUND','入口不存在。')
+                keys={'source','draft','context'}
+                if action!='request':keys.add('audit')
+                if action in ('preview','export'):keys.add('selected_ids')
+                if action=='export':keys.add('plan_sha256')
+                require_keys(data,keys,'review request')
+                args=(data['source'],data['draft'],data['context'])
+                if action=='request':
+                    self.send_bytes(200,zip_bytes(workflow.request_bundle(*args)),'application/zip','paperchoose-audit-request.zip');return
+                audit=parse_json(data['audit'])
+                if action=='check':
+                    self.send_json(200,workflow.inspect_audit(*args,audit));return
+                plan=workflow.build_plan(*args,audit,data['selected_ids'])
+                if action=='preview':
+                    self.send_json(200,plan);return
+                if data['plan_sha256']!=plan['plan_sha256']:
+                    reject('STALE_PREVIEW','输入、保护要求或选择已变化，请重新预览。')
+                self.send_bytes(200,zip_bytes(workflow.output_files(plan,*args,audit)),'application/zip','paperchoose-revision.zip');return
             if route=='/api/request':
                 require_keys(data,{'chinese','english'},'request')
                 self.send_bytes(200,zip_bytes(request_bundle(data['chinese'],data['english'])),'application/zip','paperchoose-audit-request.zip');return
