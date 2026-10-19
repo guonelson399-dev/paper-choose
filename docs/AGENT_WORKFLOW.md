@@ -1,91 +1,70 @@
-# 让你正在使用的助手跑完整流程
+# 助手操作：原稿 → 机翻 → 一次核对 → 作者选择
 
-目标入口：Codex、Cursor、Claude Code，以及具备相应执行能力的 Grok Bot。
-它们共用本项目的一套规则与脚本，不另维护四套翻译或核对代码。
-这里提供通用文件与命令入口，不声明已经安装到四个客户端或通过其实际验收。
+使用者提供原稿和目标语言。方向明确就直接处理；不明确才问。不强制制作中文阅读稿，不要求先审核完整术语表。完整规则见根目录 SKILL.md。
 
-## 用户只需交代什么
+## 1. 保存输入与设置
 
-把整个项目文件夹和允许处理的稿件提供给助手，发送：
+原稿保存为 UTF-8 `source.txt`。可选参考英文只用于追溯，不取代当前原稿。建立 `context.json`：
 
-> 请读取这个项目的 SKILL.md 和 docs/AGENT_WORKFLOW.md，使用 Paper Choose 处理我指定的稿件。先检查本地翻译是否可用，再完成需要的翻译和核对。中文以我确认的版本为准。先给我看有编号的修改建议，等我选择后再执行；保留原稿，不自由润色。请不要另开付费 API 或上传到其他服务。
-
-提供中文原稿时，可以直接确认该中文作为依据。只有英文初稿时，先让助手产生中文阅读稿，等你确认或修订中文，再继续后续核对。
-不要求你手动复制 JSON；有执行能力的助手可以生成文件、调用程序并向你展示建议。
-
-## 助手先检查环境
-
-1. 读取 `SKILL.md`、`references/list-lock.md` 和当前任务需要的规则文件。
-2. 确认你能读取用户指定文件并执行 Python。只有聊天权限时，说明缺少文件/命令能力，转为文件交换流程，不声称已在用户电脑运行。
-3. 定位项目目录与同一个 Python 解释器。Windows 可选翻译环境为 `.paperchoose-venv\Scripts\python.exe`；Linux 为 `.paperchoose-venv/bin/python`。
-4. 运行 `python -m paperchoose.translation` 查看安装状态。这里的 `python` 须替换为上一步找到的解释器路径，后续每条命令使用同一个解释器。
-5. 缺少翻译组件时，报告缺件并按用户授权使用 `setup_local_translation.cmd` 或 `docs/LOCAL_TRANSLATION.md` 安装。不要在翻译失败时拿助手自己生成的译文冒充独立机翻。
-
-必须在能访问项目代码和模型的执行环境里运行。云端 Codex 的文件和模型不会自动出现在用户的 Windows 电脑上。
-当前助手对稿件的读取受其服务与用户设置约束；本地翻译并不意味着云端助手也离线。
-
-## 翻译与核对
-
-以下文件名是示例。先绑定用户实际文件与版本；输出使用新的任务目录，不覆盖已有目录。
-命令在项目根目录执行；带空格的路径必须加引号。当前翻译每次最多 5,000 个字符，长稿按用户确认的章节拆分。
-
-已有作者确认的中文 `source.zh.txt` 时：
-
-```sh
-python -m paperchoose translate --input source.zh.txt --source zh --target en --out work/mt-01
-python -m paperchoose prepare --chinese source.zh.txt --english work/mt-01/translated.en.txt --out work/request-01
+```json
+{
+  "source_language": "en",
+  "target_language": "zh",
+  "protection_mode": "combined",
+  "protected_terms": ["SFC"],
+  "author_notes": "保留可能、不证明因果等主张强度。",
+  "reference_original": ""
+}
 ```
 
-先创建 `work` 父目录。`translate` 生成独立译稿和 `translation.json`，记录实际引擎、模型、来源摘要及时间。翻译本身不授予修改原稿的权限。
+方向仅支持 en→zh 或 zh→en。保护方式 `auto`、`manual`、`combined`。auto 时手动 terms 和 notes 留空；填写了手动要求则选择 manual 或 combined。manual 仍检查完整语义，仅不额外添加AI术语表。protected_terms 只放本次目标文本必须精确保留的写法，每项独立一行。
 
-只有英文 `draft.en.txt` 时，可先生成中文阅读稿：
+参数和文件路径由实际工作目录确定，不覆盖原稿或已有结果目录。先建立 `work` 父目录。
 
-```sh
-python -m paperchoose translate --input draft.en.txt --source en --target zh --out work/reading-01
-```
+## 2. 取得机翻稿
 
-把中文交给作者确认或修订。未经确认，不把这份回译直接当作原英文正确性的证明。保留最初 AI 英文供后续只读对照，作者确认的中文才是本轮核对依据。
-
-将作者实际确认的中文另存为 `source.zh.txt`，不要自动把阅读稿标为已确认。然后运行上面的中文→英文与 `prepare` 两条命令，使用新的输出目录。确认前停在阅读稿阶段。
-
-如果作者已提供确认的中文和要核对的英文，跳过翻译，直接生成请求：
+已有机翻稿可直接保存为 `draft.txt`，跳过翻译。否则按照明确方向调用本地 Argos，例如英文→中文：
 
 ```sh
-python -m paperchoose prepare --chinese source.zh.txt --english draft.en.txt --out work/request-01
+python -m paperchoose translate --input source.txt --source en --target zh --out work/mt-01
 ```
 
-此路线后续 `check` 和 `apply` 的 `--english` 都使用同一个 `draft.en.txt`，不得混用机翻目录中的另一版本。纯英文作者修订的 AEC 对照直接比较两个英文版本，不强制来回翻译。
+以下命令的 `--draft` 使用实际译文路径，此例为 `work/mt-01/translated.zh.txt`。中文→英文相应使用 `--source zh --target en` 和 `translated.en.txt`。不要把机翻阅读稿自行升级为语义权威。每次本地翻译最多5,000字符，长稿按完整段落/章节处理并保留顺序；不默默截断。
 
-读取请求目录中的 `request.json` 与 `AUDIT_PROMPT.md`。**当前助手自己完成核对**，按指定格式保存 `audit.json`，不另接 API，不调用第二个模型来冒充当前助手。
-写清实际核对来源，复制请求中的版本摘要，不猜测或重算成另一个版本。只列真实发现，不为演示凑修改项。
+模型未装好时说明实际问题，可使用作者已有译文；不得声称模型已运行。安装步骤见 README 和 LOCAL_TRANSLATION。
+
+## 3. 一轮识别与核对
 
 ```sh
-python -m paperchoose check --chinese source.zh.txt --english work/mt-01/translated.en.txt --audit work/audit.json
+python -m paperchoose prepare-review --source-text source.txt --draft work/mt-01/translated.zh.txt --context context.json --out work/request-01
 ```
 
-给作者展示中文说明的编号清单：原英文、中文依据、问题、最小改法。若程序校验未通过，先修正格式或定位，再展示可执行建议。不得把“通过格式检查”说成“意思已验证”。
-
-## 等作者选择，再执行
-
-助手不得自行选择全部建议，也不得把用户要求开始流程当成批准修改。
-作者选择 `P1-01` 后，才能执行对应命令：
+读取实际生成的 `AUDIT_PROMPT.md` 与 `request.json`，由当前获准处理材料的助手执行语义核对。一次处理术语、保护内容和翻译偏移；不把AI观察当成作者约束，不以“更好听”为理由修改。返回 `audit.json`，复制模板哈希，不编造哈希、引文或来源。
 
 ```sh
-python -m paperchoose apply --chinese source.zh.txt --english work/mt-01/translated.en.txt --audit work/audit.json --select P1-01 --out work/result-01
+python -m paperchoose check-review --source-text source.txt --draft work/mt-01/translated.zh.txt --context context.json --audit audit.json
 ```
 
-作者明确全部不采用时使用 `--none`，不要同时传 `--select`。
-检查并交付 `revised.en.txt`、`changes.diff`、`decisions.json`。报告采用与未采用的编号，并让作者检查含义与必要的排版。
-输入被修改后，重新生成请求与核对清单。不得绕过版本检查、用全文重写代替择项执行，或额外整理邻句。
-BTI/AEC 继续只读，不并入这条自动修改链。
+展示作者能看懂的编号、机翻原句、最小改法、原稿依据与中文理由。**等待作者选择**，不能用预设示例、自动识别选项或先前的另一轮选择代替本轮授权。
 
-## 各入口的当前状态
+## 4. 按选择执行
 
-| 入口 | 使用方式 | 验收状态 |
-|---|---|---|
-| Codex | 在具备文件与命令能力的执行环境中读取本说明并运行通用命令 | 本轮执行环境已跑通命令链；其他 Codex 部署未逐一验证 |
-| Cursor | 向其 Agent 提供项目、规则与任务；需要它有文件和终端执行权限 | 未做客户端验收 |
-| Claude Code | 在项目目录向助手提供本说明与任务，使用相同命令 | 未做客户端验收 |
-| Grok Bot | 需先确认具体 Bot 能否访问项目文件并执行命令；具备能力时使用相同命令 | 具体部署未确认，未验收 |
+作者选择 P1-01 后：
 
-用户需要确认的是中文原意和修改选择。其余文件传递与命令可由有权限的助手执行；不用为了核对环节再单独配置一个 API。
+```sh
+python -m paperchoose apply-review --source-text source.txt --draft work/mt-01/translated.zh.txt --context context.json --audit audit.json --select P1-01 --out work/result-01
+```
+
+作者全部不采用时用 `--none`，仍导出未改变的机翻稿。执行器阻止版本不符、引用不存在、位置不明确、重叠及已有指定写法减少。最终缺少指定写法会记录在 `missing_protected_terms`；不得称保护检查全部通过。
+
+下载结果同时保留原稿、机翻稿、新稿、上下文、审阅清单与决定。字面检查不能证明术语位置、数字对应或全部语义正确。
+
+输入、方向、保护设置或参考原文发生变化，重新准备请求并取得新选择。完成所选修改后发现新问题，另列下一轮，不能搭便车修复。
+
+## 手动网页与兼容入口
+
+网页使用同一 v2 工作流。作者可保存/恢复项目；恢复不自动选择修改。网页没有自动AI后端，手动使用时仍导出请求并导回建议。JSON 只是交换格式，不是需要普通作者学习的概念。
+
+旧 `prepare/check/apply --chinese --english` 和 `/api/request` 等 v1 接口仍支持已有 zh→en 案例；新页面不混用 v1 数据。新流程必须使用 `*-review`，不能把英文塞进“中文权威”字段对外宣称完成新流程。
+
+BTI/AEC 为可选独立只读诊断，不调用 apply。无额外 API 的助手模式需要所在客户端具备文件和命令权限；云端助手不能假定能读用户 Windows 本机。

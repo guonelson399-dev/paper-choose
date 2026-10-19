@@ -1,40 +1,37 @@
-# 核对 JSON 格式 v1
+# 核对格式 v2
 
-这个格式用于助手/人工与确定性执行器之间交换核对意见。
-程序不会把 JSON 中的意见视为作者已批准，也不会执行其中的命令或文件路径。
+新页面及 `prepare-review / check-review / apply-review` 使用 v2。请求包中的模板是本轮权威字段清单，不手工修改哈希来绕过版本检查。
 
-使用 `prepare` 或网页导出的 request.json 取得准确哈希；不要让模型自行计算或改写哈希。
-所有字段必填，未知字段及重复键拒绝。编码 UTF-8，文件内不带 Markdown 围栏。
-完整可运行样例见 `../examples/synthetic/audit.v1.json`。
+输入为 `source`（作者原稿）、`draft`（待修改机翻稿）、`context`（设置）。context 必须包含：source_language、target_language、protection_mode、protected_terms、author_notes、reference_original，详见 AGENT_WORKFLOW。
 
-| 顶层字段 | 约束 |
-|---|---|
-| schema_version | 整数 1 |
-| mode | translation_audit；BTI/AEC拒绝作为修改输入 |
-| chinese_sha256 / english_sha256 | 对原始 UTF-8 文本计算 SHA-256；不统一换行或删除 BOM |
-| reviewer | kind 为 human / assistant / synthetic；label 填实际来源。这是填报，不是认证 |
-| proposals | 最多200行；空列表仅代表来源未列修改，程序不认证语义正确 |
+```json
+{
+  "schema_version": 2,
+  "mode": "translation_audit",
+  "source_sha256": "复制请求模板",
+  "draft_sha256": "复制请求模板",
+  "context_sha256": "复制请求模板",
+  "reviewer": {"kind": "assistant", "label": "实际核对来源"},
+  "protection_observations": [],
+  "proposals": []
+}
+```
 
-每行必须且只能包含：
+哈希是精确 UTF-8 文本的 SHA-256；context 哈希针对排序键、无多余空白、非ASCII保留原文的规范 JSON。它绑定设置，不认证作者身份或语义质量。
 
-| 字段 | 约束 |
-|---|---|
-| id | 唯一 P1-01 / P2-01 等编号；后缀至少两位数字 |
-| category | meaning、number、negation、modality、scope、attribution、term、technical 之一 |
-| before / after | 原跨度与唯一替换文本，均非空且不同；不支持插入或删除 |
-| context_before / context_after | 紧邻原跨度的上下文；允许空；用于重复句的唯一定位 |
-| source_quote | 在当前中文中精确出现的引文 |
-| reason | 供作者审阅的中文说明 |
+每条 `protection_observations` 仅含字符串 `source_quote`、`target_form`、`reason`。引用必须存在于原稿；manual 模式列表为空。这是AI只读观察，不是自动执行约束。
 
-**定位以原稿为准。** 两个选中跨度重叠时拒绝整次应用。一个替换产生的新短语不会成为另一个修改项的目标。
-没有 source_quote 或跨度含糊的项目可以显示为 blocked；其他独立有效项仍可选择。
-结构错误、版本不符或重复ID使整份核对清单不可执行。
+每条 `proposals` 仅含字符串 `id`、`category`、`before`、`after`、`context_before`、`context_after`、`source_quote`、`reason`。
 
-**选择独立于核对清单。** 网页复选框默认空；CLI 要求 --select ID... 或 --none。
-不得让助手向 audit 添加 selected_ids。选择记录仅表示本次操作，不验证真实人类身份。
+- id：唯一 P1-01 / P2-01 等编号。
+- category：meaning、number、negation、modality、scope、attribution、term、technical。
+- before / after：机翻稿中的精确最小跨度与唯一替换；非空、不同。
+- context_before / context_after：紧邻跨度的原文，用来消除重复定位。
+- source_quote：当前原稿的精确引文。参考英文不能代替它。
+- reason：具体解释为何需要修改，不能仅说“更自然”。
 
-导出 decisions.json 中的 audit_sha256 使用排序键、无额外空白、非ASCII不转义的规范 JSON，
-不等同于任意格式化原文件的字节哈希。plan_sha256绑定整份采用记录；预览后清单或选择变化会拒绝旧预览导出。
+不接受多余字段、重复JSON键、自动选择、未知模式或BTI/AEC修改。返回零建议可以；未完成核对不能伪装成零问题。最多200条建议和200条观察。
 
-**语义边界：** “引用存在”“位置匹配”“修改未越界”均不证明替换正确。
-故意错误但位置合法的建议仍可能被作者选择并执行；测试记录了这个边界。
+`/api/review/request` 接收 source/draft/context；check 加原始JSON字符串 audit；preview 再加 selected_ids；export 再加预览的 plan_sha256。均需本地会话令牌。具体选区执行复用经过测试的 core.py 算法，公开报告使用 source/draft 语言角色。
+
+旧格式 v1 仍由旧接口支持，只适用于原有 zh→en 输入；不能导入新页面。原有 examples/synthetic/audit.v1.json 保留作历史兼容测试，新页面演示将其转换为当前输入绑定的合成 v2 清单。
