@@ -1,3 +1,7 @@
 __pycache__/
 *.py[cod]
 .venv/
+
+.paperchoose-venv/
+.translation-data/
+translation-record*.json

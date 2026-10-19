@@ -3,7 +3,7 @@ name: paper-limit-choose-2
 description: Audit Chinese-to-English academic translation against the author-confirmed Chinese source, list correction IDs, apply only author-selected spans, and manage explicit word constraints. Use for paper-limit-choose-2, translation fidelity, BTI back-translation, AEC author-edit contrast, or author-gated revision. Not for choosing papers, ranking drafts, free polishing, or evading AI detection.
 license: MIT
 metadata:
-  version: "2.1.0-dev.1"
+  version: "2.1.0-dev.1+localmt.3"
   type: workflow
   predecessor: paper-limit-choose 1.6.0
 ---
@@ -83,7 +83,7 @@ Word-count work is a later stage, not a reason to restyle the translation.
 
 Follow `references/output-template.md` for Phase 1. Follow `references/bti-template.md` for Phase 3 BTI. Those files are audit output, not a rewrite.
 
-There is no default cap. When close to an applicable boundary, compare with the required submission counter; do not assume a fixed five-word tolerance. This package includes a deterministic executor for explicitly selected, nonempty P1/P2 replacements in UTF-8 plain text. It has no semantic-review or machine-translation backend. Other operations remain manual. If an independent BTI/AEC translation is unavailable, name that missing input; do not label an unperformed independent translation as completed.
+There is no default cap. When close to an applicable boundary, compare with the required submission counter; do not assume a fixed five-word tolerance. This package includes a deterministic executor for explicitly selected, nonempty P1/P2 replacements in UTF-8 plain text. It includes optional independent local Argos machine translation. The current authorized assistant performs semantic review; there is no automatic cloud-review backend. C/D/E remain assistant-guided operations outside the deterministic executor. If an independent BTI/AEC translation is unavailable, name that missing input; do not label an unperformed independent translation as completed.
 
 ## List A — P1 Must fix
 
@@ -184,7 +184,8 @@ Inputs
 - Author-revised source — the text the author changed (Chinese or English)
 - Machine-translated English of the author-revised source — the 机翻英文稿 under contrast
 
-If the author already supplies the 机翻英文稿, use that. If not, and an author-revised source exists, use an available, authorized independent translation tool on that source alone and record its actual tool/version. If unavailable, report the missing rendering and stop AEC. Do not feed the original AI English into that rendering.
+If the author-revised source is already English, compare it directly without a translation round trip.
+For a Chinese source, if the author already supplies the 机翻英文稿, use that. If not, and an author-revised source exists, use an available, authorized independent translation tool on that source alone and record its actual tool/version. If unavailable, report the missing rendering and stop AEC. Do not feed the original AI English into that rendering.
 
 Do not treat wording difference as an automatic error. Open a finding only when the two English texts appear to state different propositions, scope, strength, attribution, or logic.
 
@@ -196,13 +197,17 @@ Every POSSIBLE DIVERGENCE or MATERIAL DIVERGENCE ends with Author decision requi
 
 Output only `references/aec-template.md`. Then stop.
 
-## Local workbench execution (2.1.0-dev.1)
+## Local workbench and agent execution
 
 Use `python -m paperchoose serve --open` from this folder for the local selection page.
-The program does not call a model. Export a request for the author-selected assistant;
-follow AUDIT_PROMPT.md in that request to return the strict JSON. Do not change its input hashes.
+Optional local translation uses Argos models; the program does not automatically call a cloud AI.
+Read `docs/AGENT_WORKFLOW.md` for translation, prepare/check/apply, and version binding.
+A file-and-command-capable assistant can run these commands and produce strict JSON itself.
+For the manual page route, export a request for the author-selected assistant.
+Follow AUDIT_PROMPT.md in that request and do not change its input hashes.
 Only return P1/P2 nonempty replacements to this executor. C/D/E and BTI/AEC are not accepted.
-The author imports the result and selects IDs. All checkboxes begin unselected.
+On the page, the author imports the result and selects IDs; all checkboxes begin unselected.
+In agent mode, show the list and wait for explicit author selections before invoking apply.
 The program rejects changed input versions, missing/ambiguous spans, missing Chinese quotes,
 and overlapping selected spans. It creates a new output and verifies unchanged outside spans.
 A quoted phrase existing in the source does not prove the suggested translation is correct.

@@ -1,29 +1,12 @@
-Paper Choose 2.1.0-dev.1 — local workbench candidate
+Paper Choose 本地翻译候选版 2.1.0-dev.1+localmt.3
 
-1. Extract the complete paper-limit-choose-2 directory.
-2. Install/use Python 3.10 or newer. No pip packages are required.
-3. Windows: double-click start_windows.cmd and keep the terminal open.
-   Command line, from this directory:
-     python -m paperchoose serve --open
-4. Open http://127.0.0.1:8765/ if the browser did not open.
-5. Try the synthetic example, select P1-01, preview, then download.
-6. Stop the local service with Ctrl+C.
-
-If the port is occupied:
-  python -m paperchoose serve --port 8766 --open
-If Windows has only the py launcher, replace python with py -3.
-The Windows launcher itself has not been run in the Linux test environment.
-
-The server binds only to 127.0.0.1. It does not store manuscripts or call models.
-There are no downloads, API keys, installers or cloud calls in the launcher.
-A Python interpreter and browser are external prerequisites, not bundled software.
-
-For a compatible assistant, explicitly supply SKILL.md and referenced files.
-This candidate has not been installed into or used to overwrite any existing skill.
-The assistant produces an audit JSON; the local program applies only your selected IDs.
-
-Run checks from this directory:
-  python -B -m unittest discover -s tests -v
-
-See README.md and docs/AUDIT_FORMAT.md. Public release still requires the author's
-repository, visibility, content and license/attribution decision.
+先解压整个 paper-choose 文件夹，再打开 README.md。
+基础功能：安装 Python 3.10 或更新版本，双击 start_windows.cmd。
+可选本地翻译：使用 Python 3.12，双击 setup_local_translation.cmd。
+安装器联网下载依赖与双向模型，不读取稿件。安装后重启工具。
+在页面使用“中文 → 英文”或“英文 → 中文（阅读草稿）”。
+先预览译文，再选择采用。采用后要为新版本重新核对。
+AI 核对由当前助手完成；有文件与命令执行权限的助手可读取 docs/AGENT_WORKFLOW.md 跑整条链，不需另开 API。
+单独使用网页时仍需导出请求并导入建议。
+原稿不被覆盖，关闭页面前请保存译文、采用记录和结果。
+Windows 安装器尚未实机验证。更详细说明及已做检查见 README.md。

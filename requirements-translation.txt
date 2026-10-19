@@ -1,0 +1,5 @@
+# Optional translation environment, Python 3.10-3.12.
+# Install CPU torch first; see README. The base workbench remains stdlib-only.
+argostranslate==1.9.6
+torch==2.5.1
+protobuf==3.20.3
