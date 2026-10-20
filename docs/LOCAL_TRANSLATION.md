@@ -10,11 +10,11 @@
 建议安装 Python 3.12 后双击根目录的 `setup_local_translation.cmd`。
 安装器会询问是否联网下载；按 Y 才开始。完成后重新启动 `start_windows.cmd`。
 该启动器优先使用项目内的 `.paperchoose-venv`，避免安装和运行使用不同解释器。
-本轮未在 Windows 运行安装器，遇到失败请保留报错。
+遇到安装失败，请保留报错信息。
 
 ## Linux / macOS 命令行
 
-在项目目录执行。上一版本的以下安装及中英翻译已在 Linux / Python 3.12.14 运行；macOS 未验收。
+在项目目录执行以下 Linux 安装命令。macOS 需要选择适用的 PyTorch 安装方式。
 CPU PyTorch 的官方索引主要用于 Linux / Windows；macOS 请按 PyTorch 官方安装指引配置。
 
 ```sh
@@ -26,7 +26,7 @@ python3.12 -m venv .paperchoose-venv
 ```
 
 安装会访问 PyPI、PyTorch 与 Argos 的模型下载服务；不需要稿件。
-安装固定双向 1.9 模型，并校验与本轮实测归档一致的 SHA-256。
+安装固定双向 1.9 模型，并校验脚本内固定的模型归档 SHA-256。
 翻译时不更新索引、不下载模型。模型缺失会返回错误，保留页面原稿。
 
 ## 页面操作与保留记录
@@ -48,9 +48,6 @@ python3.12 -m venv .paperchoose-venv
   另支持 en→zh。使用现有会话令牌、Host 和 Origin 校验，不提供公网接口。
 - 返回译文、输入及输出 SHA-256、实际引擎/模型版本、UTC 时间。`meaning_verified` 固定为 false。
 
-## 验证范围
+## 测试
 
-基础和新增 Python 测试覆盖输入边界、并发拒绝、失败脱敏、来源记录、HTTP 令牌与跨站拒绝。
-JavaScript 测试模拟状态与 DOM，覆盖异步旧结果、预览不自动采用、取消替换、采用清除旧核对、
-原文记录下载和旧预览拒绝；不是浏览器视觉或 Windows 操作验收。
-真实机翻另使用合成短句运行，不把模拟翻译当成引擎验证。
+项目根目录运行 `python -B -m unittest discover -s tests -v`。翻译相关单元测试包含模拟响应；检查真实翻译效果时需要已安装的模型和实际文本。

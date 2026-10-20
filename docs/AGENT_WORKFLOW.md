@@ -26,32 +26,6 @@ python scripts/translate_bridge.py local --from-lang zh --to-lang en --input wor
 
 **现有 `prepare-review/check-review/apply-review` 只接受 en→zh 或 zh→en。它们尚不支持把原始英文和 Argos 英文作为 source/draft 的这条链。** 目前此步由 Agent 按择项规则执行并检查实际差异；不冒称程序保证。不要把 DeepSeek 中文填进“作者原稿”来绕过方向校验。
 
-## Base44 网页改造要求（尚未实施）
-
-保留既有视觉设计，由 Base44 调整交互和实现；下面是功能要求，不是现有能力声明。
-
-1. 第一步保留“英文原稿”，增加/明确“DeepSeek 中文译稿”，再保存“Argos 英文机翻稿”。允许先粘贴由 Agent 生成的中文；不能标成 Argos 中文输出。
-2. “用本机 Argos 翻译”读取中文框，调用现有本地翻译能力时使用 `source=zh`、`target=en`。返回英文写入待修改稿，原始英文与中文不覆盖。中文变化后清除旧译文的有效状态；旧异步请求不得覆盖新输入。
-3. 核对时明确读取三份材料：英文原稿决定意思，中文解释中间偏差，Argos 英文是待修改稿。原始英文中的专有名词和明确保护要求要核对，不默认逐字恢复所有原句。
-4. 同步修改 `paperchoose/workflow.py` 的方向校验、请求提示词、输入绑定与导出，以及 `frontend/base44/functions/checkTranslation/entry.ts` 的输入检查和提示词。现有 v2 拒绝 en→en，不能仅修改前端标签或欺骗方向字段。三份文本与保护设置均需参与过期检查；引文依据应来自原始英文。
-5. 云端核对的发送同意要覆盖实际发送的三份材料，并说明目的地；DeepSeek 翻译的授权与云端核对分开。API 密钥不能放进浏览器代码、GitHub 或导出包。网页直连 DeepSeek 仍需单独实现，不假装粘贴入口就是 API 已接通。
-6. 所有建议默认不选。只在 Argos 英文中执行被选中的最小跨度，导出四份文本及来源/核对/采用记录。重新翻译、改变原稿/中文/英文或保护设置时，旧建议与选择失效。
-7. 原有 5000 字符翻译批次与 15000 字符核对限制要按实际输入调整并测试；不以改标签掩盖截断。保留 Base44 布局，完成前端构建和后端部署后才能称网站已更新。
-
-## 合成验收例子
-
-以下三份均为人工构造的测试夹具，不是 DeepSeek 或 Argos 实际输出。
-
-- 原始英文：`The pilot involved 48 households. The change may reduce costs; it does not prove causation.`
-- 模拟 DeepSeek 中文：`试点涉及84户家庭。该变化可能降低成本；它不能证明因果关系。`
-- 模拟 Argos 英文：`The pilot involved 84 households. The change reduces costs; it proves causation.`
-
-核对应发现：84 与原始英文 48 不符（来自中文中间稿的偏差）；reduces 丢失 may 的强度；proves 丢失否定。修改对象都是 Argos 英文，不是直接覆盖中文或原始英文。
-
-只选择数字修改时，输出必须为：
-`The pilot involved 48 households. The change reduces costs; it proves causation.`
-
-后两处未选择的错误仍保留并报告未解决。全部不采用时，输出与原始 Argos 英文逐字相同。若 Argos 原本使用 `might reduce costs`，不能仅为统一原稿的 may 而修改。
 
 ---
 
