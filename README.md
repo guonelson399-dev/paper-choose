@@ -58,6 +58,12 @@
 
 原有 Skill、命令行和手动导入建议仍保留。打开 `http://127.0.0.1:8765/classic` 可进入原界面；其操作见 [原界面说明](docs/CLASSIC_WORKBENCH.md)。让有文件和命令权限的助手读取 [SKILL.md](SKILL.md) 与 [AGENT_WORKFLOW](docs/AGENT_WORKFLOW.md)。这些入口保留双向核对能力，新网页聚焦英文原稿→中文机翻。
 
+## 想用 DeepSeek 翻成中文？
+
+已有英文原稿时，可以让支持本地文件和命令的 Agent 调用 DeepSeek，生成忠实中文译文：保留作者声音、术语、数字和论证强度，翻译时不纠错、不润色、不改结构。原稿始终保留，后续修改另列编号，由你决定。
+
+这是可选的 **Skill／命令行入口**，网页的 Argos 入口照常使用，尚未增加 DeepSeek 按钮。DeepSeek 是云端服务，会发送本次英文并可能产生费用；密钥只在用户本机配置，不要提交到 GitHub 或聊天。详见 [配置与运行说明](references/translation-bridge.md)，实际使用的 [翻译提示词](references/faithful-en-zh-prompt.txt) 也可直接查看。
+
 ## 计划中的音频校对扩展
 
 希望以后也能处理粤语夹杂英语的录音转写：结合录音和课件找出可疑术语、数字或否定词，让你回听并选择改哪些地方。
@@ -80,4 +86,5 @@
 验证：项目根目录执行 `python -B -m unittest discover -s tests -v`；在 `frontend` 执行 `npm test`、`npm run lint`、`npm run build:local`。测试覆盖和未完成检查见 [发布状态](docs/CANDIDATE_STATUS.md)。
 
 来源和许可说明见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。本次没有新增或更换项目许可证。工具检查与作者确认帮助控制修改范围，不自动证明译文语义正确。
+
 
