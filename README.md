@@ -30,7 +30,7 @@
 
 当前下载包中的 Base44 页面仍是“英文原稿 → Argos 中文机翻 → 核对中文 → 导出中文”的旧路线。它不会自动完成上面的 DeepSeek→Argos→英文修改链。
 
-旧页左边放英文、右边放中文，点击同意后由云端核对，作者选择后本地导出。演示中文是人工编写、故意带错的测试材料；点击核对仍会请求实际配置的云端 AI。完整新路线的页面改造交给 Base44，具体要求见 [接续要求](docs/AGENT_WORKFLOW.md#base44-网页改造要求尚未实施)。
+旧页左边放英文、右边放中文，点击同意后由云端核对，作者选择后本地导出。演示中文是人工编写、故意带错的测试材料；点击核对仍会请求实际配置的云端 AI。完整新路线尚未接入此页面。
 
 ## 翻译与核对在哪里运行？
 
@@ -43,7 +43,7 @@
 
 本地服务不自动保存稿件；云端处理和留存遵循服务提供方政策。关闭或刷新网页会丢失未下载的内容和翻译进度。仅放入你允许处理的材料。
 
-源码中的 Base44 应用 ID 是作者提供的连接配置，不是密钥。**公开源码不代表向所有下载者承诺免费的云端服务**；是否可用取决于该应用的发布、访问权限和额度。本轮没有重新部署 Base44 云端函数。自建服务见 [前端部署说明](frontend/部署说明.md)。
+源码中的 Base44 应用 ID 是作者提供的连接配置，不是密钥。**公开源码不代表向所有下载者承诺免费的云端服务**；是否可用取决于该应用的发布、访问权限和额度。GitHub 源码更新不代表 Base44 云端服务已经部署。自建服务见 [前端部署说明](frontend/部署说明.md)。
 
 ## 为什么还有长度限制？
 
@@ -91,6 +91,6 @@
 
 重建网页：在 `frontend` 目录执行 `npm ci`、`npm run build:local`，然后执行 `python ../scripts/install_webapp.py`。
 
-验证：项目根目录执行 `python -B -m unittest discover -s tests -v`；在 `frontend` 执行 `npm test`、`npm run lint`、`npm run build:local`。测试覆盖和未完成检查见 [发布状态](docs/CANDIDATE_STATUS.md)。
+验证：项目根目录执行 `python -B -m unittest discover -s tests -v`；在 `frontend` 执行 `npm test`、`npm run lint`、`npm run build:local`。API 和模型的模拟响应不代表真实翻译效果；真实模型与客户端需单独验证。
 
-来源和许可说明见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。本次没有新增或更换项目许可证。工具检查与作者确认帮助控制修改范围，不自动证明译文语义正确。
+来源和许可说明见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。工具检查与作者确认帮助控制修改范围，不自动证明译文语义正确。
