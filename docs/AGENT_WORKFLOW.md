@@ -21,7 +21,17 @@
 
 参数和文件路径由实际工作目录确定，不覆盖原稿或已有结果目录。先建立 `work` 父目录。
 
-## 2. 取得机翻稿
+## 2. 取得待核对译文
+
+只有英文原稿、希望用 DeepSeek 翻中文时，读取 `references/translation-bridge.md`，在本次材料获准发送后运行：
+
+~~~sh
+python scripts/translate_bridge.py deepseek-zh --input source.txt --output work/draft.ds.zh.txt --allow-cloud
+~~~
+
+该入口只做忠实翻译，保留作者声音，不执行纠错、润色、结构调整或 anti-defensive。仅请求翻译时交付后停止。若还请求核对，以下步骤的 `--draft` 改用实际 DeepSeek 译文路径；source 仍是英文，context 使用 en→zh，保留 metadata 说明来源。DeepSeek 输出不能标成 Argos 或独立离线机翻。
+
+### 原有 Argos 入口
 
 已有机翻稿可直接保存为 `draft.txt`，跳过翻译。否则按照明确方向调用本地 Argos，例如英文→中文：
 
@@ -68,3 +78,4 @@ python -m paperchoose apply-review --source-text source.txt --draft work/mt-01/t
 旧 `prepare/check/apply --chinese --english` 和 `/api/request` 等 v1 接口仍支持已有 zh→en 案例；新页面不混用 v1 数据。新流程必须使用 `*-review`，不能把英文塞进“中文权威”字段对外宣称完成新流程。
 
 BTI/AEC 为可选独立只读诊断，不调用 apply。无额外 API 的助手模式需要所在客户端具备文件和命令权限；云端助手不能假定能读用户 Windows 本机。
+
