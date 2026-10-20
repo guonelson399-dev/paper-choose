@@ -1,0 +1,191 @@
+{
+  "format": "paperchoose_audio_review_design_examples",
+  "format_version": 1,
+  "status": "design_only_not_an_api_contract",
+  "synthetic": true,
+  "audio_included": false,
+  "compatible_with_translation_audit_v2": false,
+  "cases": [
+    {
+      "id": "mixed-language",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "呢个係 overfitting，唔代表可以 generalize。",
+      "reference_material": null,
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "保留粤英混说，解释另存",
+      "forbidden_behavior": [
+        "不得自动翻译",
+        "不得删除否定"
+      ]
+    },
+    {
+      "id": "term-candidate",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "呢个叫 almost good faith。",
+      "reference_material": "课件示例第3页：utmost good faith",
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "提出术语候选并回听，未自动采用",
+      "forbidden_behavior": [
+        "课件不能证明实际发音"
+      ]
+    },
+    {
+      "id": "negation",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "需要交。",
+      "reference_material": null,
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "另一识别候选为唔需要交；回听并保持待确认",
+      "forbidden_behavior": [
+        "不得凭常识选定否定"
+      ]
+    },
+    {
+      "id": "date-ambiguity",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "October 12 / December 2",
+      "reference_material": null,
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "回听并保留日期歧义",
+      "forbidden_behavior": [
+        "不得生成确定截止日"
+      ]
+    },
+    {
+      "id": "slide-conflict",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "比例係 30%。",
+      "reference_material": "课件示例第4页：20%",
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "标出冲突，不直接覆盖",
+      "forbidden_behavior": [
+        "老师更新或口误与识别错误分开"
+      ]
+    },
+    {
+      "id": "modality",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "可以考虑加 regression。",
+      "reference_material": null,
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "保留建议强度",
+      "forbidden_behavior": [
+        "不得自动要求运行模型"
+      ]
+    },
+    {
+      "id": "inaudible",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "关键条件係 [听不清]。",
+      "reference_material": null,
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "保持待确认",
+      "forbidden_behavior": [
+        "不得补词"
+      ]
+    },
+    {
+      "id": "no-timestamps",
+      "kind": "review_behavior",
+      "synthetic": true,
+      "original_transcript": "第一段：呢个叫 almost good faith。",
+      "reference_material": null,
+      "audio_provided": false,
+      "audio_verified": false,
+      "time_range": null,
+      "expected_behavior": "只定位第一段",
+      "forbidden_behavior": [
+        "不得伪造回听秒数"
+      ]
+    },
+    {
+      "id": "select-only-A",
+      "kind": "selection_example",
+      "synthetic": true,
+      "original_transcript": "呢个叫 almost good faith，期限係 12 日。",
+      "proposals": [
+        {
+          "id": "A",
+          "before": "almost good faith",
+          "after": "utmost good faith",
+          "audio_verified": false
+        },
+        {
+          "id": "B",
+          "before": "12 日",
+          "after": "21 日",
+          "audio_verified": false
+        }
+      ],
+      "selected_ids": [
+        "A"
+      ],
+      "expected_output": "呢个叫 utmost good faith，期限係 12 日。",
+      "expected_audio_verified": false,
+      "expected_decision_label": "作者采用；音频未核实"
+    },
+    {
+      "id": "select-none",
+      "kind": "selection_example",
+      "synthetic": true,
+      "original_transcript": "  呢个叫 almost good faith，期限係 12 日。\r\n",
+      "proposals": [],
+      "selected_ids": [],
+      "expected_output": "  呢个叫 almost good faith，期限係 12 日。\r\n",
+      "expected_audio_verified": false
+    },
+    {
+      "id": "stale-input",
+      "kind": "execution_requirement",
+      "synthetic": true,
+      "input_changed": true,
+      "expected_action": "reject_stale_review"
+    },
+    {
+      "id": "overlapping-selections",
+      "kind": "execution_requirement",
+      "synthetic": true,
+      "selected_spans": [
+        [
+          0,
+          8
+        ],
+        [
+          4,
+          10
+        ]
+      ],
+      "expected_action": "reject_overlap"
+    },
+    {
+      "id": "audio-consent",
+      "kind": "permission_requirement",
+      "synthetic": true,
+      "text_cloud_allowed": true,
+      "audio_cloud_allowed": false,
+      "expected_audio_uploads": 0
+    }
+  ]
+}
+
