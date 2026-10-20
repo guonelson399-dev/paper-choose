@@ -1,6 +1,6 @@
 ---
 name: paper-limit-choose-2
-description: Translate existing Chinese or English manuscripts and audit machine translations against the author's source. Identify protected terminology and semantic drift in one review, propose minimal correction IDs, and apply only author-selected spans. Use for Paper Choose, English-only Chinese translation through DeepSeek, translation fidelity, author-controlled corrections, explicit word constraints, BTI or AEC. Not for choosing papers, free polishing, or evading AI detection.
+description: Translate existing Chinese or English manuscripts and audit machine translations against the author's source. Identify protected terminology and semantic drift in one review, propose minimal correction IDs, and apply only author-selected spans. Use for Paper Choose, DeepSeek Chinese followed by Argos English, English-only Chinese translation, translation fidelity, author-controlled corrections, explicit word constraints, BTI or AEC. Not for choosing papers, free polishing, or evading AI detection.
 license: MIT
 metadata:
   version: "2.1.0-dev.2+shortflow.1"
@@ -12,23 +12,27 @@ metadata:
 
 Treat the author's supplied source and explicit author decisions as the semantic basis. The source can be Chinese or English. Treat the machine translation as the text under review and the sole target of the selected-span executor. Preserve the original source and unmodified machine output separately.
 
-Do not force English→Chinese→English. A machine-generated Chinese reading draft is not author intent. If the author actually supplies revised Chinese, use that as the current source; an optional original English reference supports tracing terminology and old claims but cannot override the author's explicit revision. Resolve material conflicts or ambiguous intent at the affected location before proposing a correction. Do not ask the author to approve an entire intermediate reading draft.
+## English → DeepSeek Chinese → Argos English → author-selected corrections
 
-## English-only source → faithful Chinese with DeepSeek
+For the requested complete Paper Choose workflow, preserve these distinct artifacts:
+1. Original English: immutable semantic reference, including author-given names and technical identities.
+2. DeepSeek Chinese: faithful intermediate translation, not automatically author-approved intent. Use `references/faithful-en-zh-prompt.txt`; preserve voice and meaning without source correction, polishing, restructuring or anti-defensive editing. Send only material authorized for DeepSeek.
+3. Argos English: translate the DeepSeek Chinese alone with local Argos zh→en. Do not feed the original English to Argos as a rewriting template. This English machine output is the correction target.
+4. Revised English: create only after the author selects correction IDs. Preserve all earlier artifacts separately.
 
-When the user asks to translate an existing English manuscript (including AI-generated English), keep English as the semantic authority. Do not ask for a Chinese source or require author confirmation of an entire intermediate translation.
+Read `references/translation-bridge.md` for the two actual translation commands. Do not stop after Chinese when the complete workflow was requested; only an explicit Chinese-translation-only task stops there. Missing translation access is a blocker for that stage, not permission to invent outputs or silently substitute engines.
 
-Read `references/translation-bridge.md`; the script loads `references/faithful-en-zh-prompt.txt`. Preserve author voice, claims, terminology, numbers, negation, scope and argument order. Use normal Chinese grammar without polishing, correcting source facts, restructuring or deleting defensive wording.
+Review all three inputs together. Compare the Argos English against original English for meaning and protected identities; use Chinese to trace where drift arose. If DeepSeek mistranslated, flag that intermediate error but propose the smallest correction to Argos English using the original English as evidence. Do not silently edit Chinese or ask for blanket confirmation of the whole Chinese draft. Explicit later author revisions can change intent only within their stated scope; unresolved conflicts need local clarification.
 
-Use DeepSeek only when sending this manuscript to that provider is authorized; keep the key in `DEEPSEEK_API_KEY`. Preserve raw output and provenance. Report unavailable access without silently substituting another engine.
+Identify terminology and necessary corrections in the same review; allow manual, AI-assisted or combined protection. For each ID show the exact Argos span, minimal replacement, original English quote, intermediate Chinese evidence where relevant, and Chinese reason. Preserve equivalent wording; do not restore every word to the original or rewrite the whole manuscript. Stop for selection. After applying, compare against the untouched Argos English: all differences must be selected spans; no selection means unchanged output. Input or constraints changing invalidates the old list and selection.
 
-For translation-only requests, return the Chinese translation and stop. A separately requested fidelity review may use that output as the target draft, with the original English as source; corrections still require selected IDs. Source correction, stylistic revision, reader-oriented restructuring and anti-defensive editing belong to a separately requested Paper Choose/ResearchOS stage, not the translation call.
+Current v2 program accepts only zh→en or en→zh, not this English-source/English-target review. Do not pass generated Chinese as author authority, relabel English as Chinese, or claim `prepare-review` supports this route. An Agent can follow the manual selected-ID protocol and check the actual diff; that is not a new programmatic enforcement guarantee. The Base44 page still needs the corresponding three-input workflow and backend adaptation.
 
-This is an Agent/CLI option. It does not add a DeepSeek button to the Base44 webpage or replace Argos. DeepSeek output is LLM translation, not an independent offline MT baseline.
+Keep later source correction, stylistic revision, reader-oriented restructuring and anti-defensive editing as separately requested tasks. This route is an editable fidelity review, not the read-only BTI/AEC diagnostic.
 
-## Short workflow
+## Other direct bilingual workflows (existing v2 executor)
 
-1. Bind the source, target-language draft, direction and author constraints to exact versions. Infer direction only from an explicit task; ask once if the target language is unknown. The local bridge supports zh→en and en→zh. Same-language English review does not require a translation round trip and is outside the v2 translation executor.
+1. Bind the source, target-language draft, direction and author constraints to exact versions. Infer direction only from an explicit task; ask once if the target language is unknown. The local bridge supports zh→en and en→zh. The complete round-trip workflow above has different input roles and is outside this v2 executor.
 2. If needed, call the authorized translator on the source alone: local Argos, or the optional DeepSeek English→Chinese bridge above. Save the raw result. Do not pass a historical English draft as a template for rewriting or silently edit the raw machine output. Alternatively import the author's existing machine translation. Do not claim translation ran if it did not.
 3. **In one semantic review**, identify protected content and compare source with translation. Do not add a separate mandatory terminology-approval stage. Use the selected protection mode below. Show only necessary correction IDs; put correctly preserved terms in optional read-only observations.
 4. Stop for the author's selected IDs. Automatic identification is not approval to edit. An earlier decision or example selection does not authorize this new list.
@@ -80,4 +84,3 @@ BTI/AEC remain separate from editable proposals; neither may change text or offe
 - AEC: compare the author's revised English, or the machine English translated from the author's revised Chinese alone, with the original AI English. No round trip if the author's revision is already English. Labels: SAME CLAIM / WORDING ONLY / POSSIBLE DIVERGENCE / MATERIAL DIVERGENCE. Follow `references/aec-template.md`.
 
 Conclude substantive or ambiguous diagnostic findings with “Author decision required.” Do not treat machine agreement as proof or silently merge diagnostic findings into executable P1/P2.
-
