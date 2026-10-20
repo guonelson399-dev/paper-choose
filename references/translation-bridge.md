@@ -1,11 +1,18 @@
-# 翻译桥接：先忠实翻译，再按需要审阅
+# 翻译流程：英文 → DeepSeek 中文 → Argos 英文 → Paper Choose
 
-## 只有英文原稿时
+## 四份文件，各有用途
 
-英文原稿（包括 AI 起草的英文）是依据。无需先准备中文，也不要求用户先确认整份中文原意。
-使用 [忠实翻译提示词](faithful-en-zh-prompt.txt)：保留作者声音与研究含义。只为正常中文语法调整局部语序，不纠正原稿事实、不润色、不删免责、不重排结构。提示词是约束，不保证模型零误差。
+| 文件 | 谁生成 | 用来做什么 |
+| --- | --- | --- |
+| `source.en.txt` | 作者提供，可为 AI 起草稿 | 核对原意、专有名词和论证强度，保留不覆盖 |
+| `work/draft.ds.zh.txt` | DeepSeek | 忠实中文中间稿，交给 Argos；不能自动当作作者确认的原意 |
+| `work/draft.argos.en.txt` | Argos | 从上述中文译出的英文，是 Paper Choose 要修改的对象 |
+| `work/revised.en.txt` | 作者选择后由 Agent 生成 | 只包含作者采用的最小修改 |
 
-此脚本仅提供 Agent/命令行入口，不代表网页新增了 DeepSeek 按钮。网页 Argos 入口保持原状。DeepSeek 是云端生成式翻译，不是 Argos 独立离线机翻。
+完整流程不在中文译稿处结束。只有明确要求“仅翻成中文”时才在 DeepSeek 后停止。
+使用 [忠实翻译提示词](faithful-en-zh-prompt.txt)，第一步只保留作者声音和原意；润色、纠正原稿、重排结构、anti-defensive 另行处理。
+
+这是 Agent 操作规程与已有翻译命令的组合。当前网页仍为英文→中文核对，尚未实现此三份输入的完整链；不要往旧页面错放材料。网页改造说明见 [助手流程与 Base44 接续要求](../docs/AGENT_WORKFLOW.md)。
 
 ## 配置
 
@@ -21,7 +28,7 @@ Python 3.10+，DeepSeek 路径只用标准库。密钥由用户在本机通过�
 https://api-docs.deepseek.com/zh-cn/
 https://api-docs.deepseek.com/api/create-chat-completion/
 
-## 运行
+## 第一步：DeepSeek 将英文译成中文
 
 先确认用户允许将本次英文发送给 DeepSeek，调用可能产生 API 费用。既有明确授权可沿用，不重复询问；仅安装配置不代表允许发送任意私人稿件。
 
@@ -40,7 +47,25 @@ python scripts/translate_bridge.py deepseek-zh --input source.en.txt --output wo
 输出必须是新文件，不能覆盖原稿、已有译文或记录。缺密钥、拒绝云端、请求失败、空回复、非 stop 结束（含输出截断）都会报错，不伪装成成功。不自动换模型、重试付费请求或改用当前助手代译。
 客户端单次最多 12000 字符（含空格），这是本脚本的保守范围，不是 DeepSeek 官方上限。长稿按完整章节拆分并保存顺序；不截断，不承诺自动整篇处理。
 
-只有翻译任务时到此停止。后续核对保留原始译文，对照英文列编号，用户选择后才生成新稿。网页若导入此译文，应注明 DeepSeek 来源；不要把它称为 Argos 输出。原稿纠错、润色、结构调整与 anti-defensive 编辑属于另行请求的阶段，不由翻译自动触发。
+## 第二步：Argos 读取中文，译成英文
+
+在本机安装 Argos 与 zh→en 直连模型后执行：
+
+~~~bash
+python scripts/translate_bridge.py local --from-lang zh --to-lang en --input work/draft.ds.zh.txt --output work/draft.argos.en.txt
+~~~
+
+输入是 DeepSeek 的中文输出，不是原始英文。保留中文及其 metadata，不自动润色或修复中间稿。模型未安装就报告该阶段未运行，不能用 Agent 代译冒充 Argos。
+
+## 第三步：Paper Choose 核对英文机翻稿
+
+Agent 同时读取原始英文、DeepSeek 中文和 Argos 英文。原始英文决定原意，中文帮助定位错误来源，Argos 英文是唯一修改对象。DeepSeek 本身的误译也要识别；不能把中间稿中的错误传到最终英文。
+
+在一轮核对中识别保护内容、列必要修改编号。每项展示 Argos 英文原片段、最小改法、原始英文依据及中文理由；需要时并列中文中间稿。含义正确的不同表述不改，不把整篇恢复成原始英文。
+
+等作者选择后，生成新的英文稿、实际差异和采用记录；未选部分保持原样，全部不选就保留 Argos 英文。原始英文、中文中间稿、原始 Argos 英文不覆盖。稿件或约束变化后，旧建议和选择失效。
+
+当前 v2 执行器只支持中→英／英→中，不能直接接受这条英→英核对链。上述择项步骤目前由 Agent 按规则执行并检查差异；不能把它称为已经接入网页的自动执行器，也不能把 DeepSeek 中文塞进“作者中文原稿”字段来绕过限制。
 
 ## 原有 BTI / AEC 独立诊断
 
