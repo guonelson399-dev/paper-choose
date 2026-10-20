@@ -58,6 +58,16 @@
 
 原有 Skill、命令行和手动导入建议仍保留。打开 `http://127.0.0.1:8765/classic` 可进入原界面；其操作见 [原界面说明](docs/CLASSIC_WORKBENCH.md)。让有文件和命令权限的助手读取 [SKILL.md](SKILL.md) 与 [AGENT_WORKFLOW](docs/AGENT_WORKFLOW.md)。这些入口保留双向核对能力，新网页聚焦英文原稿→中文机翻。
 
+## 计划中的音频校对扩展
+
+希望以后也能处理粤语夹杂英语的录音转写：结合录音和课件找出可疑术语、数字或否定词，让你回听并选择改哪些地方。
+
+**目前只有规则与合成案例，尚未接入录音转写、局部回听或音频校对功能。** 现在的论文翻译流程照常使用。课件只提供参考，不能代替录音原话；音频默认本地处理。
+
+- [用大白话看规则和例子](docs/audio-review-protocol.zh-CN.md)
+- [开发用合成案例](examples/audio-review/cases.json)（不是现有翻译接口的输入）
+- [怎样检查有没有改错](docs/audio-review-validation.zh-CN.md)
+
 ## 开发者
 
 - `frontend/`：可维护的 Base44 前端、云端函数和锁定依赖。
@@ -70,3 +80,4 @@
 验证：项目根目录执行 `python -B -m unittest discover -s tests -v`；在 `frontend` 执行 `npm test`、`npm run lint`、`npm run build:local`。测试覆盖和未完成检查见 [发布状态](docs/CANDIDATE_STATUS.md)。
 
 来源和许可说明见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。本次没有新增或更换项目许可证。工具检查与作者确认帮助控制修改范围，不自动证明译文语义正确。
+
