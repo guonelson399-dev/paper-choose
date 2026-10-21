@@ -1,0 +1,42 @@
+{
+  "note": "人工构造的合成核对夹具，不是 DeepSeek、Argos 或云端 AI 的实际输出。",
+  "source": "The pilot involved 48 households. The change may reduce costs; it does not prove causation.",
+  "pivot": "试点涉及84户家庭。该变化可能降低成本；它不能证明因果关系。",
+  "draft": "The pilot involved 84 households. The change reduces costs; it proves causation.",
+  "reviewer": {
+    "kind": "synthetic",
+    "label": "Synthetic fixture, not live AI"
+  },
+  "proposals": [
+    {
+      "id": "P1-01",
+      "category": "number",
+      "before": "84",
+      "after": "48",
+      "context_before": "involved ",
+      "context_after": " households",
+      "source_quote": "48 households",
+      "reason": "数字与英文原稿 48 不符；偏差来自中文中间稿的 84。"
+    },
+    {
+      "id": "P1-02",
+      "category": "modality",
+      "before": "reduces",
+      "after": "may reduce",
+      "context_before": "The change ",
+      "context_after": " costs",
+      "source_quote": "may reduce costs",
+      "reason": "丢失 may 的不确定强度。"
+    },
+    {
+      "id": "P1-03",
+      "category": "negation",
+      "before": "proves",
+      "after": "does not prove",
+      "context_before": "it ",
+      "context_after": " causation",
+      "source_quote": "does not prove causation",
+      "reason": "丢失否定，意思相反。"
+    }
+  ]
+}
