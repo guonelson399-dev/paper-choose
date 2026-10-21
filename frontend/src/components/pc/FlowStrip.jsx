@@ -1,10 +1,10 @@
 import React from 'react';
 
 const STEPS = [
-  { t: '放入稿件', d: '英文原稿 + 机翻稿' },
+  { t: '放入稿件', d: '原稿 + 中文 + Argos 英文' },
   { t: '核对设置', d: '保护内容与授权' },
   { t: '逐条选择', d: '你决定改哪些' },
-  { t: '导出结果', d: '下载修改后的译稿' },
+  { t: '导出结果', d: '下载修改后的英文' },
 ];
 
 export default function FlowStrip({ step, onJump }) {

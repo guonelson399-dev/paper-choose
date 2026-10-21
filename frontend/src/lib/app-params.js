@@ -1,4 +1,5 @@
 import { getAccessToken } from '@base44/sdk';
+import { IS_LOCAL, LOCAL_APP_ID } from '@/lib/localMode';
 
 const isNode = typeof window === 'undefined';
 
@@ -15,7 +16,7 @@ const getAppParams = () => {
 		clearStoredAccessToken();
 	}
 	return {
-		appId: import.meta.env.VITE_BASE44_APP_ID,
+		appId: import.meta.env.VITE_BASE44_APP_ID || (IS_LOCAL ? LOCAL_APP_ID : undefined),
 		token: getAccessToken(),
 		functionsVersion: (!isNode && new URLSearchParams(window.location.search).get("functions_version")?.trim()) || import.meta.env.VITE_BASE44_FUNCTIONS_VERSION,
 		appBaseUrl: import.meta.env.VITE_BASE44_APP_BASE_URL,

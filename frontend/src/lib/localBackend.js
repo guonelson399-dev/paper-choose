@@ -35,4 +35,4 @@ export async function post(conn, path, body) {
 
 export const postJson = async (conn, path, body) => (await post(conn, path, body)).json();
 
-export const hasEnZh = (conn) => !!conn?.translation?.pairs?.some((p) => p.source === 'en' && p.target === 'zh');
+export const hasZhEn = (conn) => !!conn?.translation?.pairs?.some((p) => p.source === 'zh' && p.target === 'en');

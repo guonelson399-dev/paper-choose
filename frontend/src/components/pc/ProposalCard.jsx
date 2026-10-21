@@ -14,7 +14,7 @@ export default function ProposalCard({ p, on, blocked, onToggle }) {
           {on && <Check className="h-3.5 w-3.5" />}{on ? '已采用' : p.ready ? '采用' : '无法套用'}
         </button>
       </div>
-      <p className="mt-4 font-serif text-sm italic text-muted-foreground">原稿：“{p.source_quote}”</p>
+      <p className="mt-4 font-serif text-sm italic text-muted-foreground">英文原稿：“{p.source_quote}”</p>
       <p className="mt-3 text-base leading-relaxed">
         <span className="rounded bg-red-50 px-1 text-red-800 line-through decoration-red-400">{p.before}</span>
         <span className="mx-2 text-muted-foreground">→</span>

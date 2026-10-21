@@ -9,7 +9,7 @@ export default function ArgosHelp() {
         怎样安装本机翻译（可选） <ChevronDown className="h-3 w-3 transition group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-3 space-y-2 text-xs leading-relaxed text-muted-foreground">
-        <p>翻译是 Paper Choose 的可选组件，不装也能核对和修改（直接粘贴机翻稿即可）。</p>
+        <p>翻译是 Paper Choose 的可选组件，不装也能核对和修改（直接粘贴 Argos 英文即可）。</p>
         <p>1. 安装 Python 3.12（python.org 下载，安装时勾选 “Add to PATH”）。</p>
         <p>2. 在 Paper Choose 文件夹里双击 <b>setup_local_translation.cmd</b>。提示联网下载时按 Y，等待完成（需下载几百 MB）。</p>
         <p>3. 关闭原来的终端窗口，重新双击 <b>start_cloud_windows.cmd</b> 启动，再回到这里重新连接。</p>

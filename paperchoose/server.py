@@ -150,6 +150,31 @@ class Handler(BaseHTTPRequestHandler):
                 if data['plan_sha256']!=plan['plan_sha256']:
                     reject('STALE_PREVIEW','输入、保护要求或选择已变化，请重新预览。')
                 self.send_bytes(200,zip_bytes(workflow.output_files(plan,*args,audit)),'application/zip','paperchoose-revision.zip');return
+            if route.startswith('/api/round/'):
+                # 英文原稿 → 中文中间稿 → Argos 英文：三份材料都参与绑定，只修改 Argos 英文。
+                from . import workflow
+                action=route.removeprefix('/api/round/')
+                if action not in ('request','template','check','preview','export'):
+                    reject('NOT_FOUND','入口不存在。')
+                keys={'source','pivot','draft','context'}
+                if action not in ('request','template'):keys.add('audit')
+                if action in ('preview','export'):keys.add('selected_ids')
+                if action=='export':keys|={'plan_sha256','provenance'}
+                require_keys(data,keys,'round review request')
+                args=(data['source'],data['pivot'],data['draft'],data['context'])
+                if action=='template':
+                    self.send_json(200,parse_json(workflow.round_request_bundle(*args)['request.json'])['audit_template']);return
+                if action=='request':
+                    self.send_bytes(200,zip_bytes(workflow.round_request_bundle(*args)),'application/zip','paperchoose-audit-request.zip');return
+                audit=parse_json(data['audit'])
+                if action=='check':
+                    self.send_json(200,workflow.round_inspect(*args,audit));return
+                plan=workflow.round_plan(*args,audit,data['selected_ids'])
+                if action=='preview':
+                    self.send_json(200,plan);return
+                if data['plan_sha256']!=plan['plan_sha256']:
+                    reject('STALE_PREVIEW','三份材料、保护要求或选择已变化，请重新预览。')
+                self.send_bytes(200,zip_bytes(workflow.round_output_files(plan,*args,audit,data['provenance'])),'application/zip','paperchoose-revision.zip');return
             if route=='/api/request':
                 require_keys(data,{'chinese','english'},'request')
                 self.send_bytes(200,zip_bytes(request_bundle(data['chinese'],data['english'])),'application/zip','paperchoose-audit-request.zip');return

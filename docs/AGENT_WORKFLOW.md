@@ -24,7 +24,7 @@ python scripts/translate_bridge.py local --from-lang zh --to-lang en --input wor
 
 作者选中编号后才输出 `work/revised.en.txt`、实际差异与采用记录。未选部分包括不够漂亮的表达均保持原样。所有稿件及约束按本轮版本记录；任一输入变化后重新核对并取得新选择。
 
-**现有 `prepare-review/check-review/apply-review` 只接受 en→zh 或 zh→en。它们尚不支持把原始英文和 Argos 英文作为 source/draft 的这条链。** 目前此步由 Agent 按择项规则执行并检查实际差异；不冒称程序保证。不要把 DeepSeek 中文填进“作者原稿”来绕过方向校验。
+命令行 `prepare-review/check-review/apply-review` 保留直接双语路线。三份材料流程已接入网页及 `/api/round/template`、`check`、`preview`、`export`：请求字段为 `source`（英文原稿）、`pivot`（中文中间稿）、`draft`（Argos 英文）、`context`（en→zh→en）。网页统一完成输入绑定、作者择项和导出；不要把中文中间稿填作作者原稿。
 
 
 ---
@@ -98,7 +98,7 @@ python -m paperchoose apply-review --source-text source.txt --draft work/mt-01/t
 
 ## 手动网页与兼容入口
 
-网页使用同一 v2 工作流。作者可保存/恢复项目；恢复不自动选择修改。手动/原界面入口导出请求并导回建议；Base44 新界面有单独配置的云端核对服务，但仍是旧的英文→中文路线。JSON 只是交换格式，不是需要普通作者学习的概念。
+网页使用同一 v2 工作流。作者可保存/恢复项目；恢复不自动选择修改。手动/原界面入口导出请求并导回建议；Base44 新界面使用三份材料流程及单独配置的云端核对服务。JSON 只是交换格式，不是需要普通作者学习的概念。
 
 旧 `prepare/check/apply --chinese --english` 和 `/api/request` 等 v1 接口仍支持已有 zh→en 案例；新页面不混用 v1 数据。新流程必须使用 `*-review`，不能把英文塞进“中文权威”字段对外宣称完成新流程。
 

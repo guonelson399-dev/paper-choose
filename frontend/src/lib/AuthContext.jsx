@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { IS_LOCAL } from '@/lib/localMode';
 import { appParams } from '@/lib/app-params';
+import { IS_LOCAL } from '@/lib/localMode';
 
 const AuthContext = createContext();
 

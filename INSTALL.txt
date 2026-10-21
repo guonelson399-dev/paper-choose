@@ -7,8 +7,12 @@ Paper Choose 安装与打开（Windows）
 4. 双击 start_windows.cmd，保持终端窗口打开。
 5. 浏览器访问 http://127.0.0.1:8765/ 。不要直接双击 index.html。
 
-普通使用者无需 Node.js。新网页已预先构建。
+若下载包包含 paperchoose/webapp，则普通使用者无需 Node.js；完整源码包需按下方步骤构建安装。
 翻译和执行修改在本机；AI 核对需连接配置的 Base44 云端服务。
 连接和额度由服务方控制；GitHub 下载不自动获得云端账户或额度。
 原手动导入建议的页面：http://127.0.0.1:8765/classic
 详细步骤和故障处理见 README.md。
+
+源码候选包或修改前端后：先安装 Node.js 22.12+，在 frontend 运行 npm ci 和 npm run build:local，
+再运行 python ../scripts/install_webapp.py。构建目录 frontend/dist-local，安装到 paperchoose/webapp。
+本机模式不依赖 .env.pclocal；回到根目录启动 Python 服务。

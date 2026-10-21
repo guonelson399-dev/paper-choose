@@ -104,10 +104,10 @@ class BridgeTests(unittest.TestCase):
                 factory.return_value.open.return_value = response()
                 self.assertEqual(bridge.main(), 0)
             self.assertEqual(src.read_bytes(), original)
-            meta = json.loads(out.with_name(out.name+".metadata.json").read_text())
+            meta = json.loads(out.with_name(out.name+".metadata.json").read_text(encoding='utf-8'))
             self.assertEqual(meta["requested_model"], "deepseek-flash")
             self.assertEqual(meta["returned_model"], "fixture-model")
-            self.assertEqual(out.read_text(), "结果可能改善，但未证明因果。")
+            self.assertEqual(out.read_text(encoding='utf-8'), "结果可能改善，但未证明因果。")
             self.assertEqual(meta["source_sha256"], bridge.sha256(original.decode("utf-8")))
 
     def test_existing_metadata_prevents_network(self):
