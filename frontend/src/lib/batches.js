@@ -1,5 +1,8 @@
 // Translation units preserve every source character and boundary. Only nonblank
 // text is sent to Argos; separators are reattached exactly by mergeBatches.
+// 输入是中文译稿：优先在换行处切分，其次在中英文句末标点处，最后在空格处。
+const SENTENCE_END = /[.!?;:]["')\]]*\s+|[。！？；][”’」』）\])]*/g;
+
 export function makeBatches(text, max) {
   if (!Number.isInteger(max) || max < 2) throw new Error('Invalid translation batch size');
   const batches = [];
@@ -11,8 +14,7 @@ export function makeBatches(text, max) {
       const newline = window.lastIndexOf('\n');
       if (newline >= 0) cut = newline + 1;
       else {
-        const boundaries = [...window.matchAll(/[.!?;:]["')\]]*\s+/g)];
-        const last = boundaries.at(-1);
+        const last = [...window.matchAll(SENTENCE_END)].at(-1);
         const space = window.lastIndexOf(' ');
         cut = last ? last.index + last[0].length : space > 0 ? space + 1 : max;
       }

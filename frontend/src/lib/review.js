@@ -7,9 +7,21 @@ export const overlaps = (a, b) => a.start < b.end && b.start < a.end;
 
 export function buildContext(terms, aiTerms) {
   return {
-    source_language: 'en', target_language: 'zh',
+    source_language: 'en', pivot_language: 'zh', target_language: 'en',
     protection_mode: !aiTerms ? 'manual' : terms.length ? 'combined' : 'auto',
-    protected_terms: terms, author_notes: '', reference_original: '',
+    protected_terms: terms, author_notes: '',
+  };
+}
+
+// 写入结果包的来源记录：是页面记录的声明，程序不验证中文是否确由 DeepSeek 生成。
+export function buildProvenance(isDemo, argosInfo) {
+  const synthetic = { kind: 'synthetic', label: '合成演示材料，人工编写，不是模型输出' };
+  const e = argosInfo?.engine;
+  return {
+    source: isDemo ? synthetic : { kind: 'author', label: '作者提供的英文原稿' },
+    pivot: isDemo ? synthetic : { kind: 'pasted', label: '作者粘贴的中文译稿（声明为 DeepSeek 或 Agent 生成，程序未验证）' },
+    draft: e ? { kind: 'argos', label: `本机 ${e.name} ${e.version}（模型 ${e.model_version}），中文→英文` }
+      : isDemo ? synthetic : { kind: 'pasted', label: '作者粘贴的 Argos 英文机翻稿（程序未验证来源）' },
   };
 }
 
