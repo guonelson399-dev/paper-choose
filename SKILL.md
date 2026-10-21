@@ -26,7 +26,7 @@ Review all three inputs together. Compare the Argos English against original Eng
 
 Identify terminology and necessary corrections in the same review; allow manual, AI-assisted or combined protection. For each ID show the exact Argos span, minimal replacement, original English quote, intermediate Chinese evidence where relevant, and Chinese reason. Preserve equivalent wording; do not restore every word to the original or rewrite the whole manuscript. Stop for selection. After applying, compare against the untouched Argos English: all differences must be selected spans; no selection means unchanged output. Input or constraints changing invalidates the old list and selection.
 
-Current v2 program accepts only zh→en or en→zh, not this English-source/English-target review. Do not pass generated Chinese as author authority, relabel English as Chinese, or claim `prepare-review` supports this route. An Agent can follow the manual selected-ID protocol and check the actual diff; that is not a new programmatic enforcement guarantee. The Base44 page still needs the corresponding three-input workflow and backend adaptation.
+The direct bilingual v2 CLI accepts zh→en or en→zh. The current Base44 page uses the separate `/api/round/*` three-input workflow for English-source/English-target review, selected-span execution and export. Do not pass generated Chinese as author authority or relabel English as Chinese; `prepare-review` remains the direct bilingual CLI.
 
 Keep later source correction, stylistic revision, reader-oriented restructuring and anti-defensive editing as separately requested tasks. This route is an editable fidelity review, not the read-only BTI/AEC diagnostic.
 

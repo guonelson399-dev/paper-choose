@@ -14,7 +14,7 @@
 4. 想在页面直接翻译，先双击 `setup_local_translation.cmd`。它会询问是否下载依赖和模型，安装完成后显示 Done。已有译文可以跳过这一步。
 5. 双击 **start_windows.cmd**，保持弹出的终端窗口打开。浏览器会打开 `http://127.0.0.1:8765/`。
 
-这是你电脑上的页面。别人打开同一个地址不会看到你的稿件。下载包已包含构建好的网页，普通使用者不需要安装 Node.js 或重新打补丁。
+这是你电脑上的页面。别人打开同一个地址不会看到你的稿件。若下载包包含 `paperchoose/webapp/`，无需安装 Node.js；源码包应先按下方“开发者”步骤构建安装网页。
 
 ## 你要的完整流程
 
@@ -24,20 +24,18 @@
 4. **Paper Choose 找出必要修改**：同时看三份稿件，对照原始英文识别偏移和保护内容；中文只帮助定位错误来源。只列必要的最小改法。
 5. **你选择，再导出英文**：只修改你采用的编号。原始英文、DeepSeek 中文、Argos 英文、新英文和采用记录分别保留。
 
-**当前可按此流程让有文件和命令权限的 Agent 操作，命令见 [助手操作说明](docs/AGENT_WORKFLOW.md)。网页尚未完成这条流程的改造。** 不能只把“中文机翻稿”标签改成“英文”，还要调整 Argos 输入方向、三份稿件的绑定、云端核对和导出。
+## 当前网页支持什么？
 
-## 当前网页实际支持什么？
+网页接受英文原稿、DeepSeek 中文中间稿和 Argos 英文回译稿三份材料。DeepSeek 通过已有命令行入口生成中文后粘贴；页面可调用本机 Argos 将中文译回英文。核对同时提交三份材料，作者择项后只修改 Argos 英文，并分别导出三份输入和修改稿。
 
-当前下载包中的 Base44 页面仍是“英文原稿 → Argos 中文机翻 → 核对中文 → 导出中文”的旧路线。它不会自动完成上面的 DeepSeek→Argos→英文修改链。
-
-旧页左边放英文、右边放中文，点击同意后由云端核对，作者选择后本地导出。演示中文是人工编写、故意带错的测试材料；点击核对仍会请求实际配置的云端 AI。完整新路线尚未接入此页面。
+演示稿的三份文本均为人工合成，不能当作真实模型输出；点击核对会请求配置的云端 AI。
 
 ## 翻译与核对在哪里运行？
 
 | 操作 | 在哪里运行 |
 | --- | --- |
 | DeepSeek 英文→中文（Agent 入口） | DeepSeek 云端，另行配置密钥与本次材料发送权限 |
-| Argos 翻译 | 你的电脑；新路线是中文→英文，旧网页仍是英文→中文 |
+| Argos 翻译 | 你的电脑；网页读取中文中间稿译回英文 |
 | AI 找出翻译错误 | 配置的 Base44 云端服务，点击同意并开始核对后发送稿件和术语 |
 | 校验建议、执行选中的修改、导出 | 你的电脑 |
 
@@ -48,7 +46,7 @@
 ## 为什么还有长度限制？
 
 - **翻译**：单次请求最多 5000 字符。新页面会自动按段落或句子分批，按顺序合并，原稿不必手动拆成 5000 字符。失败后可在当前页面继续未完成批次；刷新后不能恢复。
-- **AI 核对**：当前一次接受英文和中文各 **15000 字符**。这是本应用的核对配置，不是 Argos 的限制。超过时明确提示按章节核对，不会偷偷截断。暂未实现整篇自动分批核对。
+- **AI 核对**：当前一次接受三份材料各 **15000 字符**。这是本应用的核对配置，不是 Argos 的限制。超过时明确提示按章节核对，不会偷偷截断。暂未实现整篇自动分批核对。
 - 字符不是单词，包含空格和标点。当前输入为纯文本，不保留 Word/PDF 排版。
 
 ## 遇到问题
@@ -64,13 +62,13 @@
 
 ## 已有 AI 助手的用户
 
-原有 Skill、命令行和手动导入建议仍保留。打开 `http://127.0.0.1:8765/classic` 可进入原界面；其操作见 [原界面说明](docs/CLASSIC_WORKBENCH.md)。让有文件和命令权限的助手读取 [SKILL.md](SKILL.md) 与 [AGENT_WORKFLOW](docs/AGENT_WORKFLOW.md)。现有程序核对入口支持中→英和英→中；新的完整链由 Agent 按说明操作，程序的英→英核对与网页接入尚待改造。
+原有 Skill、命令行和手动导入建议仍保留。打开 `http://127.0.0.1:8765/classic` 可进入原界面；其操作见 [原界面说明](docs/CLASSIC_WORKBENCH.md)。让有文件和命令权限的助手读取 [SKILL.md](SKILL.md) 与 [AGENT_WORKFLOW](docs/AGENT_WORKFLOW.md)。现有直接双语入口继续支持中→英和英→中；三份材料流程使用 `/api/round/*` 核对、预览与导出入口。
 
 ## 配置 DeepSeek 这一步
 
 已有英文原稿时，可以让支持本地文件和命令的 Agent 调用 DeepSeek，生成忠实中文译文：保留作者声音、术语、数字和论证强度，翻译时不纠错、不润色、不改结构。中文生成后交给本机 Argos 译成英文，再由 Paper Choose 对这份英文列编号修改，由你决定。只有明确要求“仅中文翻译”时才在第一步停止。
 
-这是可选的 **Skill／命令行入口**，网页的 Argos 入口照常使用，尚未增加 DeepSeek 按钮。DeepSeek 是云端服务，会发送本次英文并可能产生费用；密钥只在用户本机配置，不要提交到 GitHub 或聊天。详见 [配置与运行说明](references/translation-bridge.md)，实际使用的 [翻译提示词](references/faithful-en-zh-prompt.txt) 也可直接查看。
+DeepSeek 是 **Skill／命令行入口**；将其中文输出粘贴到网页，再用页面 Argos 入口译回英文。DeepSeek 是云端服务，会发送本次英文并可能产生费用；密钥只在用户本机配置，不要提交到 GitHub 或聊天。详见 [配置与运行说明](references/translation-bridge.md)，实际使用的 [翻译提示词](references/faithful-en-zh-prompt.txt) 也可直接查看。
 
 ## 计划中的音频校对扩展
 
@@ -89,7 +87,7 @@
 - `paperchoose/workflow.py`：输入绑定与作者择项修改；新旧界面共用这一份执行器。
 - `paperchoose/translation.py`：Argos 本地翻译。
 
-重建网页：在 `frontend` 目录执行 `npm ci`、`npm run build:local`，然后执行 `python ../scripts/install_webapp.py`。
+重建网页：在 `frontend` 目录执行 `npm ci`、`npm run build:local`，然后执行 `python ../scripts/install_webapp.py`。构建输出 `frontend/dist-local/`，安装到 `paperchoose/webapp/`；本机模式不依赖 `.env.pclocal`，默认公开应用 ID 位于 `frontend/src/lib/localMode.js`。
 
 验证：项目根目录执行 `python -B -m unittest discover -s tests -v`；在 `frontend` 执行 `npm test`、`npm run lint`、`npm run build:local`。API 和模型的模拟响应不代表真实翻译效果；真实模型与客户端需单独验证。
 
