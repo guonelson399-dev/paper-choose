@@ -7,13 +7,13 @@ import TermsEditor from '@/components/pc/TermsEditor';
 import ConsentBox from '@/components/pc/ConsentBox';
 import { CHECK_MAX } from '@/lib/limits';
 
-export default function SettingsStep({ conn, terms, setTerms, aiTerms, setAiTerms, consent, setConsent, checking, error, english, mt, onBack, onRun }) {
-  const tooLong = english.length > CHECK_MAX || mt.length > CHECK_MAX;
-  const ok = consent.en && consent.mt && !!conn && !tooLong;
+export default function SettingsStep({ conn, terms, setTerms, aiTerms, setAiTerms, consent, setConsent, checking, error, english, zh, mt, onBack, onRun }) {
+  const tooLong = [english, zh, mt].some((t) => t.length > CHECK_MAX);
+  const ok = consent.en && consent.zh && consent.mt && !!conn && !tooLong;
   return (
     <section>
       <StepTitle title="核对前，两件小事">
-        告诉我哪些内容不能动，并确认允许 AI 读取哪些文字。核对只会提出意思上的必要修改，不会润色你的论文。
+        告诉我 Argos 英文里哪些写法不能动，并确认允许 AI 读取哪些文字。核对只会提出恢复原意所必需的修改，不会润色，也不会把英文逐字改回原稿。
       </StepTitle>
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -28,13 +28,13 @@ export default function SettingsStep({ conn, terms, setTerms, aiTerms, setAiTerm
             <Switch checked={aiTerms} onCheckedChange={setAiTerms} />
           </label>
         </div>
-        <ConsentBox consent={consent} setConsent={setConsent} english={english} mt={mt} />
+        <ConsentBox consent={consent} setConsent={setConsent} english={english} zh={zh} mt={mt} />
       </div>
 
       {!conn && <p className="mt-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">开始核对前，请先点右上角“连接本机”。定位和执行修改由你电脑上的 Paper Choose 完成，网页不会自己改稿。</p>}
       {tooLong && (
         <p className="mt-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          单次核对上限是英文原稿、机翻稿各 {CHECK_MAX} 字符（当前英文 {english.length}、中文 {mt.length}）。为保证不漏查，网页不会截断稿件；请返回上一步，只保留要核对的一个章节或几段。
+          单次核对上限是每份稿件 {CHECK_MAX} 字符（当前英文原稿 {english.length}、中文译稿 {zh.length}、Argos 英文 {mt.length}）。为保证不漏查，网页不会截断稿件；请返回上一步，只保留要核对的一个章节或几段。
         </p>
       )}
       {error && <p className="mt-6 rounded-lg bg-destructive/5 px-4 py-3 text-sm text-destructive">{error}</p>}

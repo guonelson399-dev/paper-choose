@@ -8,7 +8,7 @@ export default function Header({ conn, setConn }) {
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
         <div className="flex items-baseline gap-3">
           <span className="font-heading text-2xl font-semibold tracking-tight">Paper Choose</span>
-          <span className="hidden text-sm text-muted-foreground sm:inline">英文论文 · 机翻核对</span>
+          <span className="hidden text-sm text-muted-foreground sm:inline">英文论文 · 回译核对</span>
         </div>
         <div className="flex items-center gap-5">
           <StatusDialog />

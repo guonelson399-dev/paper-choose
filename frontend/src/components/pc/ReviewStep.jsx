@@ -17,7 +17,7 @@ export default function ReviewStep({ review, selected, setSelected, stale, plan,
 
   if (stale) return (
     <section className="max-w-xl">
-      <StepTitle title="稿件已改动，旧建议不能再用">核对之后，英文原稿、机翻稿或保护要求发生了变化。旧建议对应的位置可能已经不对，请重新核对。</StepTitle>
+      <StepTitle title="稿件已改动，旧建议不能再用">核对之后，英文原稿、中文译稿、Argos 英文稿或保护要求发生了变化，旧建议和选择都已失效。旧建议对应的位置可能已经不对，请重新核对。</StepTitle>
       <div className="flex gap-3"><Button variant="ghost" onClick={onBack}><ArrowLeft className="mr-2 h-4 w-4" />查看稿件</Button><Button onClick={onRecheck}><RotateCcw className="mr-2 h-4 w-4" />重新核对</Button></div>
     </section>
   );
@@ -25,7 +25,7 @@ export default function ReviewStep({ review, selected, setSelected, stale, plan,
   return (
     <section>
       <StepTitle title={rows.length ? `发现 ${rows.length} 处可能的错误` : '没有发现需要修改的地方'}>
-        {rows.length ? '每一条默认不采用。你认为该改的，点“采用”。没选的地方会原样保留。' : 'AI 对照后没有提出修改。你仍可直接导出原始机翻稿。'}
+        {rows.length ? '每一条默认不采用。修改只发生在 Argos 英文稿里；你认为该改的，点“采用”，没选的地方原样保留。' : 'AI 对照后没有提出修改。你仍可直接导出原始 Argos 英文稿。'}
       </StepTitle>
 
       {review.observations?.length > 0 && (
