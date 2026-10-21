@@ -12,6 +12,8 @@ npm run build:local
 python ../scripts/install_webapp.py
 ```
 
+构建输出为 `frontend/dist-local/`，安装脚本复制到 `paperchoose/webapp/`。本机构建不需要 `.env.pclocal`，默认公开应用 ID 见 `src/lib/localMode.js`。
+
 然后回到项目根目录，运行 `python -m paperchoose serve --open`。启动脚本不需要重新打补丁。
 
 ```sh
