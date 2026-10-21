@@ -66,9 +66,9 @@ class TranslationTests(unittest.TestCase):
             fake=Mock();fake.translate.return_value='Translated draft'
             with patch.object(sys,'argv',argv), patch.object(t,'load_translator',return_value=(fake,{'name':'TEST DOUBLE'})), contextlib.redirect_stdout(io.StringIO()):
                 self.assertEqual(main(),0)
-            self.assertEqual((out/'translated.en.txt').read_text(),'Translated draft')
-            self.assertEqual(json.loads((out/'translation.json').read_text())['source_text'],'原稿')
-            self.assertEqual(source.read_text(),'原稿')
+            self.assertEqual((out/'translated.en.txt').read_text(encoding='utf-8'),'Translated draft')
+            self.assertEqual(json.loads((out/'translation.json').read_text(encoding='utf-8'))['source_text'],'原稿')
+            self.assertEqual(source.read_text(encoding='utf-8'),'原稿')
             with patch.object(sys,'argv',argv),patch.object(t,'translate_text') as translate,contextlib.redirect_stderr(io.StringIO()):
                 self.assertEqual(main(),2)
                 translate.assert_not_called()
