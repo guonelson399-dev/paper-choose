@@ -1,94 +1,78 @@
-# Paper Choose：让你的语言，忠于你本身
+# Paper Choose：717处理后的最小纠错辅助
 
-**英文论文 → DeepSeek 中文翻译 → Argos 英文机翻 → 对照英文核对 → 你选择修改 → 下载结果。**
+**原稿 + 717处理稿 → Agent 提出 P1/P2 → 作者逐项选择 → 导出修改稿。**
 
-你已经有一份英文论文，翻译成中文后交给机翻软件，再翻译成英文，会有很多翻译错误。Paper Choose 保留英文原稿，让 AI 找出机翻中的这些错误，再由你逐项决定要不要改。没有选中的地方会保持原样。
+717处理文字后，可能出现专业名词错误、主语与宾语错位、代词指代错误或论证含义偏移。Paper Choose 仅作为这一步之后的辅助工具：对照作者认可的原稿，列出必要的最小修改，让作者自己决定采用哪些。
 
-当前版本：`2.1.0-dev.3+base44.1`，开发候选版。
+**纠错后 AI 检测分数可能上升、下降或不变。Paper Choose 不提供检测分数优化，也不保证降低分数。** 可以采用部分建议，也可以全部不采用；不会为了分数保留或制造错误。
 
-## 第一次怎么打开？
+当前版本：`3.0.0-dev.1`，开发候选版。
 
-1. 点击本页绿色 **Code → Download ZIP**，下载后右键 **全部提取**。不要直接在压缩包里运行。
-2. 打开解压后的项目文件夹。你应能看到 `start_windows.cmd`、`paperchoose` 和 `frontend`。
-3. 准备 Python。翻译组件使用 Python **3.10–3.12，建议 3.12**。已有这个版本就不用重装；安装入口见 [INSTALL.txt](INSTALL.txt)。
-4. 想在页面直接翻译，先双击 `setup_local_translation.cmd`。它会询问是否下载依赖和模型，安装完成后显示 Done。已有译文可以跳过这一步。
-5. 双击 **start_windows.cmd**，保持弹出的终端窗口打开。浏览器会打开 `http://127.0.0.1:8765/`。
+## 只保留哪些功能？
 
-这是你电脑上的页面。别人打开同一个地址不会看到你的稿件。若下载包包含 `paperchoose/webapp/`，无需安装 Node.js；源码包应先按下方“开发者”步骤构建安装网页。
+- **P1：实质错误**。术语概念、主语/宾语、指代、数字、否定、因果、条件、范围、归属、主张强度等偏移。
+- **P2：必要技术性纠错**。专名大小写、影响意思的连字符、造成歧义的语法、影响来源识别的引用格式。
+- **作者择项**。P1/P2 均默认不采用；只执行已选编号，选区外文字保持不变。
+- **对照与记录**。保留原稿、717处理稿、修改稿、修改对照及作者选择记录。
 
-## 你要的完整流程
+不做全文润色、风格统一、扩写、压缩或句段删除。不要求中文中间稿，不再提供 DeepSeek/Argos 翻译、回译、BTI/AEC 或音频扩展。旧流程保留在 Git 历史中。
 
-1. **保存英文原稿**：包括 AI 起草的英文。它用来核对意思、专有名词、数字和论证强度。
-2. **DeepSeek 翻成中文**：忠实翻译，保留作者声音，不顺手润色或改研究内容。这份中文是中间稿。
-3. **Argos 把这份中文译成英文**：Argos 的输入是第二步的中文，输出才是待修改的英文机翻稿。
-4. **Paper Choose 找出必要修改**：同时看三份稿件，对照原始英文识别偏移和保护内容；中文只帮助定位错误来源。只列必要的最小改法。
-5. **你选择，再导出英文**：只修改你采用的编号。原始英文、DeepSeek 中文、Argos 英文、新英文和采用记录分别保留。
+## 怎么使用？
 
-## 当前网页支持什么？
+1. 在717自行处理文本，保留处理前的作者认可原稿。
+2. GitHub 点击 **Code → Download ZIP**，完整解压；准备 Python 3.10+。
+3. 双击 **start_windows.cmd**；Mac/Linux 在项目目录运行 `python3 -m paperchoose serve --open`。
+4. 页面粘贴英文原稿与717英文处理稿，可填写需要精确保留的术语。
+5. 选择核对方式：授权配置的云端 Agent 核对，或下载核对请求交给自己的 Agent，再导入它返回的 JSON。
+6. 阅读每一项的原文、依据、最小替换和原因，选择采用项，再导出。
 
-网页接受英文原稿、DeepSeek 中文中间稿和 Argos 英文回译稿三份材料。DeepSeek 通过已有命令行入口生成中文后粘贴；页面可调用本机 Argos 将中文译回英文。核对同时提交三份材料，作者择项后只修改 Argos 英文，并分别导出三份输入和修改稿。
+输入为纯文本，网页每份上限15,000字符；超出请按章节处理，不会截断。页面刷新会丢失未下载内容。修改输入或术语后，旧建议失效，需重新核对。
 
-演示稿的三份文本均为人工合成，不能当作真实模型输出；点击核对会请求配置的云端 AI。
+## 原稿与717的关系
 
-## 翻译与核对在哪里运行？
+原稿用于核对意思，不是要求逐字恢复的写作模板。只要717稿表达同一意思，保留其措辞和文风；例如 `may` 与 `might` 表意等价时不为统一用词而修改。
 
-| 操作 | 在哪里运行 |
+如果原稿本身含糊或与作者要求冲突，Agent 应指出具体问题，请作者澄清，而非猜测主语或补写结论。程序检查位置和选择范围，不能自动证明语义正确。
+
+本项目不调用717服务，也不验证粘贴稿是否确由717生成；配合使用不表示官方集成或合作认证。
+
+## 核对在哪里运行？
+
+| 操作 | 位置 |
 | --- | --- |
-| DeepSeek 英文→中文（Agent 入口） | DeepSeek 云端，另行配置密钥与本次材料发送权限 |
-| Argos 翻译 | 你的电脑；网页读取中文中间稿译回英文 |
-| AI 找出翻译错误 | 配置的 Base44 云端服务，点击同意并开始核对后发送稿件和术语 |
-| 校验建议、执行选中的修改、导出 | 你的电脑 |
+| 717处理 | 作者在717自行完成 |
+| 云端 Agent 核对 | 配置的 Base44 服务，授权后发送两份稿件和术语 |
+| 自有 Agent 核对 | 作者自行选择工具并交付核对请求 |
+| 建议验证、执行选择、导出 | 本机 Python 服务 |
 
-本地服务不自动保存稿件；云端处理和留存遵循服务提供方政策。关闭或刷新网页会丢失未下载的内容和翻译进度。仅放入你允许处理的材料。
+GitHub 源码更新不等于云端服务已部署。3.x 使用独立云端函数 `checkMinimalCorrection`，须部署新版函数后才能使用云端按钮；不会静默回退到旧翻译函数。未部署时，可直接使用自有 Agent 请求/导入流程。公开应用 ID 不是密钥，也不保证免费服务和额度。
 
-源码中的 Base44 应用 ID 是作者提供的连接配置，不是密钥。**公开源码不代表向所有下载者承诺免费的云端服务**；是否可用取决于该应用的发布、访问权限和额度。GitHub 源码更新不代表 Base44 云端服务已经部署。自建服务见 [前端部署说明](frontend/部署说明.md)。
+## Agent／命令行
 
-## 为什么还有长度限制？
+读取 [SKILL.md](SKILL.md)、[Agent 工作流](docs/AGENT_WORKFLOW.md) 和 [JSON 格式](docs/AUDIT_FORMAT.md)。只保留 `prepare-review`、`check-review`、`apply-review`、`serve`。
 
-- **翻译**：单次请求最多 5000 字符。新页面会自动按段落或句子分批，按顺序合并，原稿不必手动拆成 5000 字符。失败后可在当前页面继续未完成批次；刷新后不能恢复。
-- **AI 核对**：当前一次接受三份材料各 **15000 字符**。这是本应用的核对配置，不是 Argos 的限制。超过时明确提示按章节核对，不会偷偷截断。暂未实现整篇自动分批核对。
-- 字符不是单词，包含空格和标点。当前输入为纯文本，不保留 Word/PDF 排版。
+```bash
+python -m paperchoose prepare-review --source-text source.txt --draft draft.txt --context context.json --out request
+python -m paperchoose check-review --source-text source.txt --draft draft.txt --context context.json --audit audit.json
+python -m paperchoose apply-review --source-text source.txt --draft draft.txt --context context.json --audit audit.json --select P1-01 --out result
+```
 
-## 遇到问题
-
-| 情况 | 怎么处理 |
-| --- | --- |
-| 页面打不开 | 完整解压，再双击 start_windows.cmd；保持终端打开 |
-| 显示模型未安装 | 运行 setup_local_translation.cmd；也可直接粘贴已有译文 |
-| 翻译过程中改了稿件 | 旧翻译停止；用当前原稿重新翻译 |
-| 建议不能采用 | 看提示：可能位置不唯一、与另一项重叠、或违反了保护要求 |
-| 原稿、机翻稿或设置变了 | 为新输入重新核对，不能套用旧建议 |
-| 云端核对不可用 | 检查服务配置和权限；可用下方的助手/原界面入口 |
-
-## 已有 AI 助手的用户
-
-原有 Skill、命令行和手动导入建议仍保留。打开 `http://127.0.0.1:8765/classic` 可进入原界面；其操作见 [原界面说明](docs/CLASSIC_WORKBENCH.md)。让有文件和命令权限的助手读取 [SKILL.md](SKILL.md) 与 [AGENT_WORKFLOW](docs/AGENT_WORKFLOW.md)。现有直接双语入口继续支持中→英和英→中；三份材料流程使用 `/api/round/*` 核对、预览与导出入口。
-
-## 配置 DeepSeek 这一步
-
-已有英文原稿时，可以让支持本地文件和命令的 Agent 调用 DeepSeek，生成忠实中文译文：保留作者声音、术语、数字和论证强度，翻译时不纠错、不润色、不改结构。中文生成后交给本机 Argos 译成英文，再由 Paper Choose 对这份英文列编号修改，由你决定。只有明确要求“仅中文翻译”时才在第一步停止。
-
-DeepSeek 是 **Skill／命令行入口**；将其中文输出粘贴到网页，再用页面 Argos 入口译回英文。DeepSeek 是云端服务，会发送本次英文并可能产生费用；密钥只在用户本机配置，不要提交到 GitHub 或聊天。详见 [配置与运行说明](references/translation-bridge.md)，实际使用的 [翻译提示词](references/faithful-en-zh-prompt.txt) 也可直接查看。
-
-## 计划中的音频校对扩展
-
-希望以后也能处理粤语夹杂英语的录音转写：结合录音和课件找出可疑术语、数字或否定词，让你回听并选择改哪些地方。
-
-**目前只有规则与合成案例，尚未接入录音转写、局部回听或音频校对功能。** 现在的论文翻译流程照常使用。课件只提供参考，不能代替录音原话；音频默认本地处理。
-
-- [用大白话看规则和例子](docs/audio-review-protocol.zh-CN.md)
-- [开发用合成案例](examples/audio-review/cases.json)（不是现有翻译接口的输入）
-- [怎样检查有没有改错](docs/audio-review-validation.zh-CN.md)
+`--none` 表示全部不采用。输出目录必须不存在，避免覆盖原件。命令行支持英文同语种或中文同语种核对。
 
 ## 开发者
 
-- `frontend/`：可维护的 Base44 前端、云端函数和锁定依赖。
-- `paperchoose/webapp/`：由前端源码构建、供 Python 本地服务直接打开的网页。
-- `paperchoose/workflow.py`：输入绑定与作者择项修改；新旧界面共用这一份执行器。
-- `paperchoose/translation.py`：Argos 本地翻译。
+- `paperchoose/workflow.py`：两稿和设置绑定、P1/P2执行、导出。
+- `paperchoose/core.py`：精确选区算法；保留内部v1适配格式，不作为旧翻译产品入口。
+- `frontend/src/`：网页；`frontend/base44/functions/checkMinimalCorrection/`：云端建议生成。
 
-重建网页：在 `frontend` 目录执行 `npm ci`、`npm run build:local`，然后执行 `python ../scripts/install_webapp.py`。构建输出 `frontend/dist-local/`，安装到 `paperchoose/webapp/`；本机模式不依赖 `.env.pclocal`，默认公开应用 ID 位于 `frontend/src/lib/localMode.js`。
+```bash
+python -B -m unittest discover -s tests -v
+cd frontend
+npm ci
+npm test
+npm run lint
+npm run build:local
+python ../scripts/install_webapp.py
+```
 
-验证：项目根目录执行 `python -B -m unittest discover -s tests -v`；在 `frontend` 执行 `npm test`、`npm run lint`、`npm run build:local`。API 和模型的模拟响应不代表真实翻译效果；真实模型与客户端需单独验证。
-
-来源和许可说明见 [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md)。工具检查与作者确认帮助控制修改范围，不自动证明译文语义正确。
+构建后的页面位于 `paperchoose/webapp/`，普通用户无需 Node.js。云端部署见 [部署说明](frontend/部署说明.md)。测试使用合成材料及模拟云端响应，不代表真实模型纠错质量或AI检测结果。
