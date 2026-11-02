@@ -1,61 +1,32 @@
-# Lecture term extraction
+# 术语依据
 
-Use this when the author supplies lecture PDFs, slides, or weekly handouts.
+只核查当前稿件的专业名词与来源，不重开论文论证，不把普通词或文风偏好当成必改术语。
 
-## Extract
+## 读取材料
 
-Prefer text extraction over guessing from memory.
+实际读取作者提供的术语表、课件PDF、幻灯片或课程材料；优先提取文字。扫描件可使用可用OCR，读取失败需明确说明，不能凭记忆编造课件引文。
+重点核查人名、学派、模型、机制、机构、单位、缩写及影响意义的连字符。记录材料名及页码/章节等可定位信息；不得编造定位。
 
-```bash
-pdftotext -layout lecture.pdf lecture.txt
-```
+## 正文术语
 
-If the PDF is scanned or `pdftotext` returns little text, use the pdf skill OCR path.
+1. 作者明确指定且无概念冲突的术语形式。
+2. 对应课程课件。
+3. 其他作者课程材料。
+4. 原始学术文献。
+5. 可靠学术数据库或官方页面，仅验证当前术语。
 
-Read headings, bullet terms, named models, and author-year slides first. Ignore decorative headers and week banners unless they contain a name.
+课件缺失不阻塞有充分原稿依据的其他纠错。只在缺失材料会改变该项判断时询问作者。查不到就标明“未能核实”，不创造官方写法。
 
-## What counts as a lecture proper noun
+## 文献身份
 
-- Person names (from the current materials)
-- School and camp labels (from the current materials)
-- Model and mechanism names (from the current materials)
-- Institution names as the lecture writes them (from the current materials)
-- The lecture's own acronyms and hyphenation
+文献作者、发表题名、年份、页码及文献类型以原始出版物为依据。课件不是替代出版信息的证据。
 
-Do not harvest ordinary English from lecture prose and treat it as a required term.
+## 冲突与分类
 
-## Match against the draft
+- 同一课件有多个写法：列出具体形式及位置，请作者确认；不静默统一。
+- 正文术语的课件形式与数据库不同：优先提出课件形式，同时标注另一来源；若涉及概念冲突，暂停该项替换并请作者决定。
+- 文献身份与课件不同：列出原始出版物与课件写法，请作者确认采用项。
+- 作者术语与原稿含义冲突：标出冲突，不机械替换。
+- 改变理论概念或指向：P1；仅形式错误但影响理解/来源识别：P2；不影响理解的风格变体：不列项。
 
-For each draft proper noun
-
-1. Search the lecture text for the same person, school, or model.
-2. If found, the suggested replacement is the lecture string, including hyphenation and capitalisation.
-3. If not found in any supplied lecture file, search a library source.
-4. Write the source on the P1/P2 row.
-
-## Two tracks
-
-- Body terminology — lecture form first.
-- Bibliographic identity (published author name, title, year, document type) — original publication first.
-- If the two tracks disagree, list 讲座写法 and 原始文献. Do not auto-pick.
-
-## Conflicts
-
-| Situation | Action |
-|---|---|
-| Body term, lecture has one spelling | Use lecture spelling |
-| Body term, lecture has two spellings | P2; list both; do not pick silently |
-| Body term, lecture differs from Scholar / Crossref | Propose lecture form; note library form |
-| Bibliographic identity differs from the lecture slide | Propose the publication identity; note the lecture form |
-| Term absent from lectures | Library search; mark 库 |
-| No lecture file given | Ask once; mark 库 for this pass |
-| Cannot read the PDF | Say so; do not invent lecture quotes |
-
-## Output snippet
-
-In section 1 of the reply, name the lecture files used and how many proper nouns were taken from them. Example
-
-- 讲座文件：provided_lecture_01.pdf, provided_lecture_02.pdf
-- 讲座命中：18
-- 库补查：4
-- 未能核实：1
+来源可标为作者术语/课件/课程材料/原始文献/数据库或官方页面/未能核实，并附实际定位。程序JSON将其写入reason。protection_observations只记录，不代表已获作者修改授权。
