@@ -1,7 +1,0 @@
-Paper Choose 3.x — 717最小纠错辅助
-1. 下载GitHub ZIP并完整解压。
-2. 安装Python 3.10+；不再需要Argos、DeepSeek或翻译模型。
-3. 双击start_windows.cmd，保持终端开启；浏览器访问http://127.0.0.1:8765/。
-4. 粘贴作者原稿与717处理稿，生成建议，逐项选择再导出。
-5. 可下载请求交给自有Agent并导入JSON。云端按钮须部署新版checkMinimalCorrection函数并具有服务访问权限。
-源码重建：frontend目录npm ci、npm run build:local，然后python ../scripts/install_webapp.py。
