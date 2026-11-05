@@ -20,33 +20,3 @@
 原稿用于核对意思。只要717稿表达同一意思，保留其措辞和文风；例如 `may` 与 `might` 表意等价时不为统一用词而修改。
 
 如果原稿本身含糊或与作者要求冲突，Agent 应指出具体问题，请作者澄清。
-
-## Agent／命令行
-
-读取 [SKILL.md](SKILL.md)、[Agent 工作流](docs/AGENT_WORKFLOW.md) 和 [JSON 格式](docs/AUDIT_FORMAT.md)。只保留 `prepare-review`、`check-review`、`apply-review`、`serve`。
-
-```bash
-python -m paperchoose prepare-review --source-text source.txt --draft draft.txt --context context.json --out request
-python -m paperchoose check-review --source-text source.txt --draft draft.txt --context context.json --audit audit.json
-python -m paperchoose apply-review --source-text source.txt --draft draft.txt --context context.json --audit audit.json --select P1-01 --out result
-```
-
-`--none` 表示全部不采用。输出目录必须不存在，避免覆盖原件。命令行支持英文同语种或中文同语种核对。
-
-## 开发者
-
-- `paperchoose/workflow.py`：两稿和设置绑定、P1/P2执行、导出。
-- `paperchoose/core.py`：精确选区算法；保留内部v1适配格式。
-- `frontend/src/`：网页；`frontend/base44/functions/checkMinimalCorrection/`：云端建议生成。
-
-```bash
-python -B -m unittest discover -s tests -v
-cd frontend
-npm ci
-npm test
-npm run lint
-npm run build:local
-python ../scripts/install_webapp.py
-```
-
-构建后的页面位于 `paperchoose/webapp/`。云端部署见 [部署说明](frontend/部署说明.md)。
