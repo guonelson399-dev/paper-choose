@@ -36,7 +36,7 @@ python -m paperchoose apply-review --source-text source.txt --draft draft.txt --
 ## 开发者
 
 - `paperchoose/workflow.py`：两稿和设置绑定、P1/P2执行、导出。
-- `paperchoose/core.py`：精确选区算法；保留内部v1适配格式，不作为旧翻译产品入口。
+- `paperchoose/core.py`：精确选区算法；保留内部v1适配格式。
 - `frontend/src/`：网页；`frontend/base44/functions/checkMinimalCorrection/`：云端建议生成。
 
 ```bash
@@ -49,4 +49,4 @@ npm run build:local
 python ../scripts/install_webapp.py
 ```
 
-构建后的页面位于 `paperchoose/webapp/`，普通用户无需 Node.js。云端部署见 [部署说明](frontend/部署说明.md)。测试使用合成材料及模拟云端响应，不代表真实模型纠错质量或AI检测结果。
+构建后的页面位于 `paperchoose/webapp/`。云端部署见 [部署说明](frontend/部署说明.md)。
